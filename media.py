@@ -15,6 +15,7 @@
 """
 import os
 import random
+import re
 import urllib.parse
 
 import requests
@@ -53,14 +54,17 @@ def _get(url, **kw):
 
 
 # ---------------------------------------------------------------- фото-источники
-# Каждая функция возвращает список {"id", "url", "credit"}; credit — как подписать.
+# Каждая функция возвращает список {"id", "url", "credit", "tags"}.
+# tags — описание картинки у источника: по нему бот проверяет, что картинка правда по теме.
+# tags=None — источник сам ищет точно (Wikimedia по названию статьи), проверка не нужна.
 
 def photos_pexels(q):
     if not PEXELS_KEY:
         return []
     data = _get("https://api.pexels.com/v1/search", headers={"Authorization": PEXELS_KEY},
                 params={"query": q, "per_page": 10, "orientation": "landscape"})
-    return [{"id": f"pexels-photo:{p['id']}", "url": p["src"]["large2x"], "credit": "Pexels"}
+    return [{"id": f"pexels-photo:{p['id']}", "url": p["src"]["large2x"], "credit": "Pexels",
+             "tags": p.get("alt", "")}
             for p in data.get("photos", [])]
 
 
@@ -70,11 +74,11 @@ def photos_pixabay(q):
     data = _get("https://pixabay.com/api/", params={
         "key": PIXABAY_KEY, "q": q[:100], "image_type": "photo", "orientation": "horizontal",
         "per_page": 10, "safesearch": "true"})
-    return [{"id": f"pixabay-photo:{h['id']}", "url": h["largeImageURL"], "credit": "Pixabay"}
+    return [{"id": f"pixabay-photo:{h['id']}", "url": h["largeImageURL"], "credit": "Pixabay",
+             "tags": h.get("tags", "")}
             for h in data.get("hits", [])]
 
 
-import re
 FREE_LICENSE = re.compile(r"\bcc0\b|public domain|\bpd\b|\bpd-|\bpdm\b|no restrictions")  # без указания автора
 
 
@@ -95,7 +99,7 @@ def photos_wikimedia(q):
         if not FREE_LICENSE.search(lic):
             continue
         out.append({"id": f"commons:{page['pageid']}", "url": info.get("thumburl") or info["url"],
-                    "credit": "Wikimedia Commons"})
+                    "credit": "Wikimedia Commons", "tags": None})
     return out
 
 
@@ -105,7 +109,8 @@ def photos_openverse(q):
         "aspect_ratio": "wide,square"})
     return [{"id": f"openverse:{r['id']}", "url": r["url"],
              "credit": f"{r.get('creator') or 'автор'} / {r.get('source', 'Openverse')}, "
-                       f"{(r.get('license') or '').upper()}"}
+                       f"{(r.get('license') or '').upper()}",
+             "tags": (r.get("title") or "") + " " + " ".join(t.get("name", "") for t in r.get("tags") or [])}
             for r in data.get("results", []) if r.get("url")]
 
 
@@ -117,7 +122,9 @@ def photos_nasa(q):
         if not links:
             continue
         href = links[0]["href"].replace("~thumb.", "~medium.")
-        out.append({"id": f"nasa:{meta.get('nasa_id', href)}", "url": href, "credit": "NASA"})
+        out.append({"id": f"nasa:{meta.get('nasa_id', href)}", "url": href, "credit": "NASA",
+                    "tags": f"{meta.get('title', '')} {' '.join(meta.get('keywords') or [])} "
+                            f"{(meta.get('description') or '')[:300]}"})
     return out
 
 
@@ -150,6 +157,7 @@ def videos_pexels(q):
         if files:
             f = max(files, key=lambda f: f["width"])
             out.append({"id": f"pexels-video:{v['id']}", "url": f["link"], "credit": "Pexels",
+                        "tags": v.get("url", "").replace("-", " "),
                         "duration": v.get("duration", 0), "width": f["width"], "height": f.get("height")})
     return out
 
@@ -167,6 +175,7 @@ def videos_pixabay(q):
             f = (h.get("videos") or {}).get(size) or {}
             if f.get("url") and 0 < (f.get("size") or 0) < MAX_VIDEO_BYTES:
                 out.append({"id": f"pixabay-video:{h['id']}", "url": f["url"], "credit": "Pixabay",
+                            "tags": h.get("tags", ""),
                             "duration": h.get("duration", 0), "width": f.get("width"),
                             "height": f.get("height")})
                 break
@@ -208,26 +217,41 @@ def download(url, limit, kind="image"):
     return bytes(buf)
 
 
-def _search(sources, order, queries, used):
-    """Опрашивает источники по очереди, перемешивая результаты, чтобы картинки были разнообразнее."""
+STOP = {"the", "and", "with", "for", "from", "of", "in", "on", "a", "an", "old", "new", "big",
+        "small", "close", "up", "view", "photo", "image", "picture", "beautiful", "background"}
+
+
+def relevant(item, query):
+    """Есть ли в описании картинки хотя бы одно ключевое слово запроса (с учётом окончаний)."""
+    if item.get("tags") is None:
+        return True
+    tags = item["tags"].lower()
+    words = [w for w in re.findall(r"[a-zа-яё]+", query.lower()) if len(w) > 2 and w not in STOP]
+    return any(w[:5] in tags for w in words) if words else False
+
+
+def _search(sources, order, queries, used, per_source=2):
+    """Опрашивает источники по очереди и оставляет только то, что подходит по теме."""
     found, seen = [], set(used)
     for name in order:
         fn = sources.get(name)
         if not fn:
             continue
+        taken = 0
         for q in queries:
             try:
                 items = fn(q)
             except (requests.RequestException, ValueError, KeyError) as e:
                 log(f"{name}: недоступен ({e.__class__.__name__})")
                 break
-            fresh = [i for i in items[:6] if i["id"] not in seen]
+            fresh = [i for i in items[:10] if i["id"] not in seen and relevant(i, q)]
             random.shuffle(fresh)
-            for i in fresh[:2]:
+            for i in fresh[:per_source - taken]:
                 seen.add(i["id"])
                 found.append(i)
-            if fresh:
-                break                       # из одного источника хватит одного удачного запроса
+                taken += 1
+            if taken >= per_source:
+                break                       # с этого источника достаточно, разнообразим следующим
     return found
 
 
@@ -243,8 +267,9 @@ def collect_photos(src, post, state, n):
     if category in ("history", "art", "science"):
         queries = [src["title"]] + queries   # Commons хорошо ищет по названию статьи
     if queries:
-        candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"])
-    if AI_FALLBACK and len(candidates) < n and queries:
+        candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"],
+                              per_source=max(1, n - 1))
+    if AI_FALLBACK and not candidates and queries:   # ничего подходящего — рисуем иллюстрацию
         candidates.append(photo_ai(post.get("image_prompt") or queries[-1]))
 
     photos = []
@@ -261,10 +286,15 @@ def collect_photos(src, post, state, n):
 
 
 def collect_video(post, state):
-    queries = [q for q in [post.get("video_query")] + post.get("media_queries", []) if q][:3]
+    # Видео ищем только по video_query: нейросеть оставляет его пустым, если тему нельзя
+    # буквально показать на видео. Тогда пост будет с фото — лучше так, чем видео не в тему.
+    q = (post.get("video_query") or "").strip()
+    if not q:
+        log("Видео не подходит к теме — будет фото")
+        return None
     order = ["pexels", "pixabay"]
     random.shuffle(order)                    # чередуем источники видео
-    for v in _search(VIDEO_SOURCES, order, queries, state["used_media"]):
+    for v in _search(VIDEO_SOURCES, order, [q], state["used_media"]):
         if not 4 <= (v.get("duration") or 0) <= 40:
             continue
         try:
