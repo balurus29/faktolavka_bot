@@ -4,7 +4,7 @@
 
 Один запуск = один пост. Расписание задаётся в .github/workflows/autopost.yml.
 
-Цепочка: Википедия (факт) -> бесплатная нейросеть (GigaChat, Gemini или Groq) пишет пост
+Цепочка: источник фактов (Википедия, научпоп-сайты, NASA — см. sources.py) -> бесплатная нейросеть (GigaChat, Gemini или Groq) пишет пост
 -> картинки и видео из нескольких бесплатных источников (см. media.py) -> публикация в канал
 -> иногда викторина по теме поста.
 
@@ -27,6 +27,7 @@ from datetime import datetime, timedelta, timezone
 import requests
 
 import media
+import sources
 
 # ---------------------------------------------------------------- настройки
 TG_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
@@ -41,16 +42,12 @@ GIGACHAT_SCOPE = os.getenv("GIGACHAT_SCOPE", "") or "GIGACHAT_API_PERS"
 # Серверы Сбера подписаны российским сертификатом (НУЦ Минцифры), его добавляет workflow.
 GIGACHAT_CA = os.getenv("GIGACHAT_CA_BUNDLE", "")
 SIGNATURE = os.getenv("CHANNEL_SIGNATURE", "")         # например «👉 @my_facts»
-WIKI_LANG = os.getenv("WIKI_LANG", "") or "ru"
 
 # Доли форматов постов (в процентах). Меняйте как хотите.
 POST_TYPE_WEIGHTS = {"photo": 45, "album": 20, "video": 20, "mixed": 15}
 QUIZ_CHANCE = 0.3          # вероятность добавить викторину после поста
-ONTHISDAY_CHANCE = 0.4     # доля постов «В этот день», остальное — хорошие статьи Википедии
 
-# Темы, которые не подходят развлекательному каналу.
-STOP_WORDS = ("теракт", "убит", "расстрел", "погибл", "катастроф", "массов", "казн",
-              "геноцид", "самоубий", "войн", "бомбард", "резн")
+# Источники фактов, их доли и фильтр тем — в sources.py, источники картинок — в media.py.
 
 STATE_FILE = pathlib.Path(__file__).with_name("state.json")
 UA = "FactsChannelAutopost/1.0 (Telegram channel bot; python-requests)"
@@ -66,6 +63,7 @@ def log(*args):
 
 
 media.setup(session, log)
+sources.setup(session, log)
 
 
 # ---------------------------------------------------------------- состояние
@@ -84,132 +82,15 @@ def save_state(state):
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=1), "utf-8")
 
 
-# ---------------------------------------------------------------- Википедия
-def wiki_api(params):
-    params = {**params, "format": "json", "formatversion": 2}
-    r = session.get(f"https://{WIKI_LANG}.wikipedia.org/w/api.php", params=params, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def wiki_article(title):
-    """Текст статьи, главная картинка и ссылка."""
-    data = wiki_api({
-        "action": "query", "titles": title, "redirects": 1,
-        "prop": "extracts|pageimages|info", "explaintext": 1, "exchars": 5000,
-        "piprop": "thumbnail", "pithumbsize": 1280, "inprop": "url",
-    })
-    pages = data.get("query", {}).get("pages", [])
-    if not pages or pages[0].get("missing"):
-        return None
-    p = pages[0]
-    text = re.sub(r"\n{2,}", "\n", p.get("extract", "")).strip()
-    return {
-        "title": p["title"],
-        "text": text,
-        "url": p.get("fullurl", f"https://{WIKI_LANG}.wikipedia.org/wiki/{p['title']}"),
-        "image": (p.get("thumbnail") or {}).get("source"),
-    }
-
-
-def is_light(text):
-    low = text.lower()
-    return not any(w in low for w in STOP_WORDS)
-
-
-def source_good_article(state):
-    """Случайная избранная или хорошая статья — в них проверенные интересные факты."""
-    category = random.choice([
-        "Категория:Википедия:Избранные статьи по алфавиту",
-        "Категория:Википедия:Хорошие статьи по алфавиту",
-    ])
-    prefix = random.choice("АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЭЮЯ")
-    data = wiki_api({
-        "action": "query", "list": "categorymembers", "cmtitle": category,
-        "cmnamespace": 0, "cmlimit": 50, "cmstartsortkeyprefix": prefix,
-    })
-    titles = [m["title"] for m in data.get("query", {}).get("categorymembers", [])]
-    random.shuffle(titles)
-    for title in titles[:10]:
-        sid = f"wiki:{title}"
-        if sid in state["used_sources"]:
-            continue
-        art = wiki_article(title)
-        if art and len(art["text"]) > 800 and is_light(art["text"][:1500]):
-            return {"id": sid, "kind": "интересная статья", "material": art["text"], **art}
-    return None
-
-
-GENERIC_TITLE = re.compile(
-    r"^\d{1,4}( год)?( до н\. ?э\.)?$|^\d{1,2} [а-я]+$|^\d{3,4}-е( годы)?|\bвек\b|тысячелети|"
-    r"^(Январь|Февраль|Март|Апрель|Май|Июнь|Июль|Август|Сентябрь|Октябрь|Ноябрь|Декабрь)$",
-    re.IGNORECASE)
-
-
-def source_on_this_day(state):
-    """Событие, которое произошло в этот день в истории."""
-    now = datetime.now(MSK)
-    url = (f"https://{WIKI_LANG}.wikipedia.org/api/rest_v1/feed/onthisday/"
-           f"selected/{now:%m}/{now:%d}")
-    r = session.get(url, timeout=30)
-    if r.status_code != 200:
-        return None
-    events = r.json().get("selected", [])
-    random.shuffle(events)
-    for ev in events:
-        text, year = ev.get("text", ""), ev.get("year")
-        pages = ev.get("pages") or []
-        if not pages or not is_light(text):
-            continue
-        sid = f"otd:{year}:{text[:60]}"
-        if sid in state["used_sources"]:
-            continue
-        art = None
-        for page in pages:                          # статья о самом событии, а не о годе или дате
-            title = ((page.get("titles") or {}).get("normalized")
-                     or page.get("title", "")).replace("_", " ")
-            if GENERIC_TITLE.search(title):
-                continue
-            art = wiki_article(title)
-            if art and len(art["text"]) >= 400:
-                break
-            art = None
-        if not art:
-            continue
-        material = (f"В этот день, {now.day} {month_ru(now.month)} {year} года: {text}\n\n"
-                    f"Подробнее о теме:\n{art['text']}")
-        return {"id": sid, "kind": f"событие этого дня в истории ({year} год)",
-                "material": material, **art}
-    return None
-
-
-def month_ru(m):
-    return ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
-            "сентября", "октября", "ноября", "декабря"][m - 1]
-
-
-def pick_source(state):
-    order = [source_on_this_day, source_good_article]
-    if random.random() > ONTHISDAY_CHANCE:
-        order.reverse()
-    for attempt in range(4):
-        for fn in order:
-            try:
-                src = fn(state)
-                if src:
-                    return src
-            except requests.RequestException as e:
-                log(f"Источник {fn.__name__} недоступен: {e}")
-        time.sleep(2)
-    raise RuntimeError("Не удалось найти материал для поста")
-
-
 # ---------------------------------------------------------------- нейросеть
 PROMPT = """Ты автор популярного Telegram-канала с интересными фактами. Тон живой и лёгкий, с интригой, без канцелярита и без лживого кликбейта.
 
 Напиши пост по материалу ниже.
 Правила:
-- Используй ТОЛЬКО факты из материала. Не выдумывай цифры, даты, имена и подробности.
+- Используй ТОЛЬКО факты из материала. Не выдумывай цифры, даты, имена и подробности. Если не уверен в детали, просто не упоминай её.
+- Пиши своими словами, не копируй фразы из материала. Материал может быть на английском, пост всегда на русском.
+- Не упоминай источник, сайт, журнал или автора материала. Не пиши «учёные недавно выяснили», если в материале нет даты.
+- Не касайся политики, религии, войн и тем сексуальности.
 - Найди в материале самый неожиданный или удивительный факт и построй пост вокруг него.
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
 - text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом к читателям или неожиданным выводом.
@@ -223,7 +104,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 Ответь строго одним JSON-объектом:
 {{"title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
 
-Материал ({kind}, статья «{title}»):
+Материал ({kind}, «{title}»):
 {material}
 """
 
@@ -336,9 +217,11 @@ def write_post(src):
 
 
 def fallback_post(src):
+    if src.get("lang", "ru") != "ru":
+        return None                                # без нейросети английский материал не перевести
     paras = [s for s in src["text"].split("\n") if len(s) > 80][:2]
     return {"title": f"📚 {src['title']}", "text": "\n\n".join(paras),
-            "hashtags": ["интересное", "факты"], "media_queries": [src["title"]], "video_query": "", "category": "history", "image_prompt": "",
+            "hashtags": ["интересное", "факты"], "media_queries": [src["title"]], "video_query": "", "category": src.get("category", "history"), "image_prompt": "",
             "quiz": None}
 
 
@@ -353,38 +236,15 @@ def trim(text, limit):
     return cut.rsplit(" ", 1)[0].rstrip(",;:—-") + "…"
 
 
-def media_credits(photos, video):
-    """Подпись авторов медиа без повторов, «Википедия» уже указана как источник."""
-    out = []
-    for m in photos + ([video] if video else []):
-        c = m.get("credit")
-        if c and c != "Википедия" and c not in out:
-            out.append(c)
-    return out
-
-
-def build_caption(post, src, credits, limit=CAPTION_LIMIT):
+def build_caption(post, limit=CAPTION_LIMIT):
+    """Заголовок, текст, хэштеги и подпись канала. Источники и авторы медиа не указываются."""
     tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
     tags = " ".join(t for t in tags.split() if len(t) > 1)
-    credit = "Источник: Википедия" + (f" · Медиа: {', '.join(credits)}" if credits else "")
-    if len(credit) > 160:                        # слишком длинный список авторов
-        credits = credits[:2]
-        credit = "Источник: Википедия · Медиа: " + ", ".join(credits)
-    footer_plain = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
+    footer = "\n\n".join(x for x in [tags, SIGNATURE] if x)
     title = trim(post["title"].strip(), 100)
-    budget = limit - len(title) - len(footer_plain) - 6
-    body = trim(post["text"].strip(), max(budget, 100))
-
-    footer_html = []
-    if tags:
-        footer_html.append(html.escape(tags))
-    credit_html = f'Источник: <a href="{html.escape(src["url"], quote=True)}">Википедия</a>'
-    if credits:
-        credit_html += " · Медиа: " + html.escape(", ".join(credits))
-    footer_html.append(credit_html)
-    if SIGNATURE:
-        footer_html.append(html.escape(SIGNATURE))
-    return f"<b>{html.escape(title)}</b>\n\n{html.escape(body)}\n\n" + "\n\n".join(footer_html)
+    body = trim(post["text"].strip(), max(limit - len(title) - len(footer) - 6, 100))
+    out = f"<b>{html.escape(title)}</b>\n\n{html.escape(body)}"
+    return out + ("\n\n" + html.escape(footer) if footer else "")
 
 
 # ---------------------------------------------------------------- Telegram
@@ -470,9 +330,23 @@ def main():
 
     state = load_state()
     kind = choose_type(args.type)
-    src = pick_source(state)
-    log(f"Формат: {kind}. Материал: {src['title']}")
-    post = write_post(src)
+    tried = set()
+    for attempt in range(3):
+        src = sources.pick_source(state, exclude=tried)
+        log(f"Формат: {kind}. Источник: {src['source']}. Материал: {src['title']}")
+        post = write_post(src)
+        if post is None:
+            tried.add(src["id"])
+            continue
+        if not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
+            break
+        log("Готовый текст касается запрещённой темы — беру другой материал")
+        tried.add(src["id"])
+        state["used_sources"].append(src["id"])
+    else:
+        sys.exit("Не удалось подобрать подходящий материал")
+    if src.get("image") and not src.get("image_free"):
+        src["image_free"] = media.image_is_free(src)
 
     photos, video = [], None
     if kind in ("photo", "album", "mixed"):
@@ -482,11 +356,10 @@ def main():
         if not video and kind == "video":           # видео не нашлось — хотя бы фото
             photos = media.collect_photos(src, post, state, 1)
 
-    caption = build_caption(post, src, media_credits(photos, video),
-                            limit=4000 if not photos and not video else CAPTION_LIMIT)
+    caption = build_caption(post, limit=4000 if not photos and not video else CAPTION_LIMIT)
 
     if args.dry_run:
-        print("\n" + "=" * 60 + f"\nФормат: {kind} | тема: {post['category']} | фото: {len(photos)} | видео: {bool(video)}")
+        print("\n" + "=" * 60 + f"\nФормат: {kind} | тема: {post['category']} | {src['topic']} | фото: {len(photos)} | видео: {bool(video)}")
         print(caption)
         if post["quiz"]:
             print("\nВикторина:", json.dumps(post["quiz"], ensure_ascii=False, indent=1))
@@ -503,6 +376,7 @@ def main():
             log(f"Викторина не отправлена: {e}")
 
     state["used_sources"].append(src["id"])
+    state["recent_topics"] = (state.get("recent_topics", []) + [src["topic"]])[-20:]
     state["used_media"] += [p["id"] for p in photos] + ([video["id"]] if video else [])
     state["posts"] = state.get("posts", 0) + 1
     state["last_post"] = datetime.now(MSK).isoformat(timespec="minutes")
