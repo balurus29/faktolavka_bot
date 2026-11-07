@@ -24,7 +24,8 @@
   "otd:1917:Октябрьская революция в России (на илл.).",
   "otd:1929:в Нью-Йорке открылся Музей современного искусства.",
   "rss:https://nplus1.ru/news/2026/11/06/recovery-potential-of-small-populations",
-  "rss:https://nplus1.ru/news/2026/11/06/plasmid-immunotherapy-papillomatosis"
+  "rss:https://nplus1.ru/news/2026/11/06/plasmid-immunotherapy-papillomatosis",
+  "wiki:en:Venus in fiction"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -51,10 +52,11 @@
   "pixabay-photo:10493090",
   "pixabay-photo:9726168",
   "commons:32293334",
-  "pixabay-photo:4402809"
+  "pixabay-photo:4402809",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Planetstories.jpg/1280px-Planetstories.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 19,
- "last_post": "2026-11-07T23:20+03:00",
+ "posts": 20,
+ "last_post": "2026-11-07T23:22+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -63,6 +65,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
