@@ -10,7 +10,8 @@
   "otd:1812:русская армия освободила Витебск.",
   "otd:1941:немецкая авиация потопила теплоход «Армения» с 5000 пассажир",
   "otd:1659:Пиренейский мир подвёл черту под золотым веком испанской ист",
-  "wiki:Фанк, Арнольд"
+  "wiki:Фанк, Арнольд",
+  "otd:1918:в Баварии свергнута правившая более 700 лет династия Виттель"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -24,10 +25,11 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Traite-Pyrenees.jpg/1280px-Traite-Pyrenees.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/d/d7/Fanck_arnold.png?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:92194537",
-  "commons:92395270"
+  "commons:92395270",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Bavaria_2.jpg/1280px-Bavaria_2.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 9,
- "last_post": "2026-11-07T22:09+03:00",
+ "posts": 10,
+ "last_post": "2026-11-07T22:11+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -35,6 +37,7 @@
   "general",
   "general",
   "general",
-  "pop"
+  "pop",
+  "general"
  ]
 }
