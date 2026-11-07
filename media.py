@@ -98,8 +98,11 @@ def photos_wikimedia(q):
             continue
         if not FREE_LICENSE.search(lic):
             continue
+        desc = " ".join(re.sub(r"<[^>]+>", " ", meta.get(k, {}).get("value", ""))
+                        for k in ("ImageDescription", "ObjectName", "Categories"))
         out.append({"id": f"commons:{page['pageid']}", "url": info.get("thumburl") or info["url"],
-                    "credit": "Wikimedia Commons", "tags": None})
+                    "credit": "Wikimedia Commons", "tags": None,
+                    "desc": f"{page.get('title', '')} {desc}"[:2000]})
     return out
 
 
@@ -221,8 +224,22 @@ STOP = {"the", "and", "with", "for", "from", "of", "in", "on", "a", "an", "old",
         "small", "close", "up", "view", "photo", "image", "picture", "beautiful", "background"}
 
 
+# Мрачные изображения не ставим никогда: покойники, похороны, кровь, казни.
+MORBID = re.compile(
+    r"coffin|casket|corpse|cadaver|dead body|deceased|funeral|post.?mortem|deathbed|lying in state|"
+    r"memento mori|execution|hanged|gallows|blood|wound|autopsy|"
+    r"гроб|покойн|похорон|труп|мертв|посмертн|казн[иь]|висел|кров[ьи]|ран[аеы]\b|вскрыт",
+    re.IGNORECASE)
+
+
+def is_morbid(item):
+    return bool(MORBID.search(f"{item.get('tags') or ''} {item.get('desc') or ''}"))
+
+
 def relevant(item, query):
     """Есть ли в описании картинки хотя бы одно ключевое слово запроса (с учётом окончаний)."""
+    if is_morbid(item):
+        return False
     if item.get("tags") is None:
         return True
     tags = item["tags"].lower()
