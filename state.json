@@ -26,7 +26,8 @@
   "rss:https://nplus1.ru/news/2026/11/06/recovery-potential-of-small-populations",
   "rss:https://nplus1.ru/news/2026/11/06/plasmid-immunotherapy-papillomatosis",
   "wiki:en:Venus in fiction",
-  "rss:https://www.atlasobscura.com/places/giant-macaskill-s-grave"
+  "rss:https://www.atlasobscura.com/places/giant-macaskill-s-grave",
+  "wiki:Загорская ГАЭС"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -56,10 +57,13 @@
   "pixabay-photo:4402809",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Planetstories.jpg/1280px-Planetstories.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:66919294",
-  "pixabay-photo:4653166"
+  "pixabay-photo:4653166",
+  "pixabay-photo:1264066",
+  "pixabay-photo:3780254",
+  "commons:130558544"
  ],
- "posts": 21,
- "last_post": "2026-11-07T23:42+03:00",
+ "posts": 22,
+ "last_post": "2026-11-07T23:57+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -68,6 +72,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
