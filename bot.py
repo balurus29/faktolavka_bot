@@ -140,6 +140,12 @@ def source_good_article(state):
     return None
 
 
+GENERIC_TITLE = re.compile(
+    r"^\d{1,4}( год)?( до н\. ?э\.)?$|^\d{1,2} [а-я]+$|^\d{3,4}-е( годы)?|\bвек\b|тысячелети|"
+    r"^(Январь|Февраль|Март|Апрель|Май|Июнь|Июль|Август|Сентябрь|Октябрь|Ноябрь|Декабрь)$",
+    re.IGNORECASE)
+
+
 def source_on_this_day(state):
     """Событие, которое произошло в этот день в истории."""
     now = datetime.now(MSK)
@@ -158,8 +164,17 @@ def source_on_this_day(state):
         sid = f"otd:{year}:{text[:60]}"
         if sid in state["used_sources"]:
             continue
-        art = wiki_article(pages[0].get("title", ""))
-        if not art or len(art["text"]) < 400:
+        art = None
+        for page in pages:                          # статья о самом событии, а не о годе или дате
+            title = ((page.get("titles") or {}).get("normalized")
+                     or page.get("title", "")).replace("_", " ")
+            if GENERIC_TITLE.search(title):
+                continue
+            art = wiki_article(title)
+            if art and len(art["text"]) >= 400:
+                break
+            art = None
+        if not art:
             continue
         material = (f"В этот день, {now.day} {month_ru(now.month)} {year} года: {text}\n\n"
                     f"Подробнее о теме:\n{art['text']}")
@@ -323,7 +338,7 @@ def write_post(src):
 def fallback_post(src):
     paras = [s for s in src["text"].split("\n") if len(s) > 80][:2]
     return {"title": f"📚 {src['title']}", "text": "\n\n".join(paras),
-            "hashtags": ["интересное", "факты"], "media_queries": [], "video_query": "", "category": "other", "image_prompt": "",
+            "hashtags": ["интересное", "факты"], "media_queries": [src["title"]], "video_query": "", "category": "history", "image_prompt": "",
             "quiz": None}
 
 
@@ -387,7 +402,7 @@ def send_post(kind, caption, photos, video):
     if kind == "text" or (not photos and not video):
         tg("sendMessage", {**base, "text": caption,
                            "link_preview_options": json.dumps({"is_disabled": True})})
-    elif kind == "video" or (video and not photos):
+    elif video and (kind == "video" or not photos):
         extra = {k: video[k] for k in ("width", "height", "duration") if video.get(k)}
         tg("sendVideo", {**base, "caption": caption, "supports_streaming": "true", **extra},
            files={"video": (video["name"], video["data"], "video/mp4")})
