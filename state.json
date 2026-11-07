@@ -22,7 +22,8 @@
   "rss:https://nplus1.ru/news/2026/11/06/scratch-and-necrosis",
   "wiki:Некроптоз",
   "otd:1917:Октябрьская революция в России (на илл.).",
-  "otd:1929:в Нью-Йорке открылся Музей современного искусства."
+  "otd:1929:в Нью-Йорке открылся Музей современного искусства.",
+  "rss:https://nplus1.ru/news/2026/11/06/recovery-potential-of-small-populations"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -45,10 +46,13 @@
   "pixabay-photo:2385378",
   "pixabay-photo:3092650",
   "ai:498362",
-  "commons:172991"
+  "commons:172991",
+  "pixabay-photo:10493090",
+  "pixabay-photo:9726168",
+  "commons:32293334"
  ],
- "posts": 17,
- "last_post": "2026-11-07T22:44+03:00",
+ "posts": 18,
+ "last_post": "2026-11-07T23:16+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -57,6 +61,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
