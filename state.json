@@ -20,7 +20,9 @@
   "wiki:Убийство Зорана Джинджича",
   "wiki:Уимблдонский турнир",
   "rss:https://nplus1.ru/news/2026/11/06/scratch-and-necrosis",
-  "wiki:Некроптоз"
+  "wiki:Некроптоз",
+  "otd:1917:Октябрьская революция в России (на илл.).",
+  "otd:1929:в Нью-Йорке открылся Музей современного искусства."
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -42,10 +44,11 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/The_Famous_Bluenose.jpg/1280px-The_Famous_Bluenose.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "pixabay-photo:2385378",
   "pixabay-photo:3092650",
-  "ai:498362"
+  "ai:498362",
+  "commons:172991"
  ],
- "posts": 16,
- "last_post": "2026-11-07T22:37+03:00",
+ "posts": 17,
+ "last_post": "2026-11-07T22:44+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -54,6 +57,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
