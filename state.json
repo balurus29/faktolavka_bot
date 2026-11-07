@@ -12,7 +12,8 @@
   "otd:1659:Пиренейский мир подвёл черту под золотым веком испанской ист",
   "wiki:Фанк, Арнольд",
   "otd:1918:в Баварии свергнута правившая более 700 лет династия Виттель",
-  "rss:https://nplus1.ru/news/2026/11/05/first-1000-days"
+  "rss:https://nplus1.ru/news/2026/11/05/first-1000-days",
+  "rss:https://www.sciencedaily.com/releases/2026/09/260914102429.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -28,10 +29,12 @@
   "commons:92194537",
   "commons:92395270",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Bavaria_2.jpg/1280px-Bavaria_2.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "commons:49179423"
+  "commons:49179423",
+  "nasa:PIA18918",
+  "commons:163108912"
  ],
- "posts": 11,
- "last_post": "2026-11-07T22:19+03:00",
+ "posts": 12,
+ "last_post": "2026-11-07T22:25+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -40,6 +43,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general"
  ]
