@@ -6,7 +6,10 @@
   "rss:https://nplus1.ru/news/2026/11/06/cannabis-cardiovascular-disease",
   "wiki:Павелецкая (станция метро, Замоскворецкая линия)",
   "rss:https://www.sciencedaily.com/releases/2026/10/261031011638.htm",
-  "rss:https://www.atlasobscura.com/places/tombe-de-la-famille-nagelmackers"
+  "rss:https://www.atlasobscura.com/places/tombe-de-la-famille-nagelmackers",
+  "otd:1812:русская армия освободила Витебск.",
+  "otd:1941:немецкая авиация потопила теплоход «Армения» с 5000 пассажир",
+  "otd:1659:Пиренейский мир подвёл черту под золотым веком испанской ист"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -16,11 +19,13 @@
   "pixabay-video:184069",
   "pixabay-video:71457",
   "commons:43935072",
-  "commons:58891678"
+  "commons:58891678",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Traite-Pyrenees.jpg/1280px-Traite-Pyrenees.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 7,
- "last_post": "2026-11-07T21:55+03:00",
+ "posts": 8,
+ "last_post": "2026-11-07T21:57+03:00",
  "recent_topics": [
+  "general",
   "general",
   "general",
   "general",
