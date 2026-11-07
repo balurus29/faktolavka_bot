@@ -237,13 +237,26 @@ def is_morbid(item):
     return bool(MORBID.search(f"{item.get('tags') or ''} {item.get('desc') or ''}"))
 
 
+# Стоковые фото людей-моделей — самая частая картинка «не в тему». Берём их, только если
+# в запросе есть люди.
+PEOPLE = re.compile(r"\b(model|fashion|portrait|beauty|girl|woman|women|man|men|boy|lady|guy|"
+                    r"person|people|selfie|pose|posing|glamour|young)\b", re.IGNORECASE)
+
+
+def _words(query):
+    return [w for w in re.findall(r"[a-zа-яё]+", query.lower()) if len(w) > 2 and w not in STOP]
+
+
 def relevant(item, query):
-    """Есть ли в описании картинки хотя бы одно ключевое слово запроса (с учётом окончаний)."""
+    """Картинка подходит, если в её описании есть ВСЕ ключевые слова запроса (с учётом окончаний)."""
     if is_morbid(item):
         return False
     if item.get("tags") is None:
         return True
-    return score(item, query) > 0
+    words = _words(query)
+    if not words or PEOPLE.search(item["tags"]) and not PEOPLE.search(query):
+        return False
+    return score(item, query) == len(words)
 
 
 def score(item, query):
@@ -251,8 +264,7 @@ def score(item, query):
     if item.get("tags") is None:
         return 1
     tags = item["tags"].lower()
-    words = [w for w in re.findall(r"[a-zа-яё]+", query.lower()) if len(w) > 2 and w not in STOP]
-    return sum(w[:5] in tags for w in words)
+    return sum(w[:5] in tags for w in _words(query))
 
 
 def _search(sources, order, queries, used, per_source=2):

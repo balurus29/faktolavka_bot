@@ -95,7 +95,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
 - text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом к читателям или неожиданным выводом.
 - hashtags: 2-3 тега на русском, одним словом каждый. В text хэштеги НЕ пиши.
-- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-2 слова: главный предмет поста, который буквально видно на фото (существительное). Примеры: "octopus", "opera house", "subway station", "comet". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
+- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-2 слова: главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
 - image_prompt: описание иллюстрации к посту на английском, 1 предложение, без текста на картинке.
@@ -201,7 +201,7 @@ def write_post(src):
             try:
                 post = validate_post(parse_json(fn(prompt)))
                 log(f"Текст написан: {name}")
-                return post
+                return fact_check(post, src, name, fn)
             except requests.HTTPError as e:
                 code = e.response.status_code if e.response is not None else "?"
                 log(f"{name}: ошибка HTTP {code}")
@@ -214,6 +214,50 @@ def write_post(src):
                 time.sleep(3)
     log("Нейросети недоступны — публикую выдержку из статьи как есть")
     return fallback_post(src)
+
+
+CHECK_PROMPT = """Ты строгий редактор-фактчекер. Сверь пост с исходным материалом.
+
+Найди каждое утверждение в заголовке, тексте и викторине, которое НЕ подтверждается материалом,
+искажает его (перепутаны даты, причины и следствия, «всегда» вместо «с какого-то года», «первый» вместо «единственный»
+и т. п.) или преувеличивает. Исправь такие места по материалу или убери их. Стиль, длину, эмодзи и вопрос в конце сохрани.
+Если ошибок нет — верни пост без изменений.
+
+Ответь строго одним JSON-объектом:
+{{"errors": ["что было неверно", ...], "title": "...", "text": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
+Если в посте нет викторины, верни "quiz": null.
+
+ПОСТ:
+{post}
+
+МАТЕРИАЛ:
+{material}
+"""
+
+
+def fact_check(post, src, name, fn):
+    """Второй проход: нейросеть сверяет пост с материалом и исправляет искажения."""
+    draft = {"title": post["title"], "text": post["text"], "quiz": post["quiz"]}
+    prompt = CHECK_PROMPT.format(post=json.dumps(draft, ensure_ascii=False, indent=1),
+                                 material=src["material"][:6000])
+    try:
+        fixed = parse_json(fn(prompt))
+    except (ValueError, KeyError, IndexError, requests.RequestException) as e:
+        log(f"Проверка фактов не удалась ({e.__class__.__name__}), публикую как есть")
+        return post
+    errors = [e for e in fixed.get("errors") or [] if isinstance(e, str) and e.strip()]
+    candidate = {**post, "title": fixed.get("title"), "text": fixed.get("text"),
+                 "quiz": fixed.get("quiz") if post["quiz"] else None}
+    try:
+        candidate = validate_post(candidate)
+    except ValueError:
+        log("Проверка фактов вернула негодный ответ, публикую как есть")
+        return post
+    if errors:
+        log(f"Проверка фактов ({name}) исправила: " + "; ".join(errors)[:500])
+    else:
+        log("Проверка фактов: ошибок нет")
+    return candidate
 
 
 def fallback_post(src):
