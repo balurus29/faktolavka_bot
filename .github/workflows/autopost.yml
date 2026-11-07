@@ -37,9 +37,19 @@ jobs:
       - name: Сертификат НУЦ Минцифры для GigaChat
         continue-on-error: true
         run: |
-          curl -fsSL https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt -o ru_root.crt
-          curl -fsSL https://gu-st.ru/content/lending/russian_trusted_sub_ca_pem.crt -o ru_sub.crt
-          cat "$(python -m certifi)" ru_root.crt ru_sub.crt > ru_bundle.pem
+          cp "$(python -m certifi)" ru_bundle.pem
+          for n in root sub; do
+            curl -fsSL "https://gu-st.ru/content/lending/russian_trusted_${n}_ca_pem.crt" -o "ru_$n.crt" || continue
+            sed -i 's/\r$//' "ru_$n.crt"
+            # если файл двоичный (DER), переводим в текстовый PEM
+            grep -q "BEGIN CERTIFICATE" "ru_$n.crt" || openssl x509 -inform DER -in "ru_$n.crt" -out "ru_$n.crt"
+            if openssl x509 -in "ru_$n.crt" -noout -subject; then
+              printf '\n' >> ru_bundle.pem
+              cat "ru_$n.crt" >> ru_bundle.pem
+              printf '\n' >> ru_bundle.pem
+            fi
+          done
+          python -c "import ssl; ssl.create_default_context(cafile='ru_bundle.pem'); print('Сертификаты в порядке')"
           echo "GIGACHAT_CA_BUNDLE=$PWD/ru_bundle.pem" >> "$GITHUB_ENV"
 
       - name: Публикация
