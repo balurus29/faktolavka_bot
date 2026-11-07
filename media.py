@@ -225,7 +225,7 @@ STOP = {"the", "and", "with", "for", "from", "of", "in", "on", "a", "an", "old",
         "small", "close", "up", "view", "photo", "image", "picture", "beautiful", "background"}
 
 
-# Мрачные изображения не ставим никогда: покойники, похороны, кровь, казни, нищета и беженцы.
+# Мрачные изображения не ставим никогда: покойники, похороны, кровь, казни, нищета, катастрофы, война.
 MORBID = re.compile(
     r"coffin|casket|corpse|cadaver|dead body|deceased|funeral|post.?mortem|deathbed|lying in state|"
     r"memento mori|execution|hanged|gallows|blood|wound|autopsy|"
@@ -238,8 +238,18 @@ MORBID = re.compile(
     re.IGNORECASE)
 
 
+# Откровенные картинки тоже никогда: обнажёнка, пин-ап, обложки бульварных журналов.
+RACY = re.compile(
+    r"nud[ei]|naked|erotic|pin.?up|bikini|lingerie|topless|burlesque|sexy|seductive|"
+    r"pulp|magazine cover|nsfw|"
+    r"обнажён|обнажен|голая|эроти|бельё",
+    re.IGNORECASE)
+
+
 def is_morbid(item):
-    return bool(MORBID.search(item.get("tags") or ""))
+    """Мрачная или откровенная картинка — не ставим ни при каких условиях."""
+    tags = item.get("tags") or ""
+    return bool(MORBID.search(tags) or RACY.search(tags))
 
 
 # Стоковые фото людей-моделей — самая частая картинка «не в тему». Берём их, только если
