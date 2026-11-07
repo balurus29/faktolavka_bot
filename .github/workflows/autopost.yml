@@ -1,0 +1,65 @@
+name: Автопостинг
+
+on:
+  schedule:
+    # Время в UTC. Москва = UTC+3.
+    - cron: "7 6 * * *"     # 09:07 МСК
+    - cron: "13 10 * * *"   # 13:13 МСК
+    - cron: "21 15 * * *"   # 18:21 МСК
+    - cron: "9 18 * * *"    # 21:09 МСК
+  workflow_dispatch:
+    inputs:
+      type:
+        description: "Формат поста"
+        default: auto
+        type: choice
+        options: [auto, photo, album, video, mixed, text]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autopost
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Сертификат НУЦ Минцифры для GigaChat
+        continue-on-error: true
+        run: |
+          curl -fsSL https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt -o ru_root.crt
+          curl -fsSL https://gu-st.ru/content/lending/russian_trusted_sub_ca_pem.crt -o ru_sub.crt
+          cat "$(python -m certifi)" ru_root.crt ru_sub.crt > ru_bundle.pem
+          echo "GIGACHAT_CA_BUNDLE=$PWD/ru_bundle.pem" >> "$GITHUB_ENV"
+
+      - name: Публикация
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
+          GIGACHAT_AUTH_KEY: ${{ secrets.GIGACHAT_AUTH_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          AI_IMAGE_FALLBACK: ${{ vars.AI_IMAGE_FALLBACK }}
+          CHANNEL_SIGNATURE: ${{ vars.CHANNEL_SIGNATURE }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+        run: python bot.py --type "${{ inputs.type || 'auto' }}"
+
+      - name: Сохранить историю постов
+        run: |
+          git config user.name "autopost-bot"
+          git config user.email "autopost-bot@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || (git commit -m "История постов" && git push)
