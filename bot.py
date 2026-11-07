@@ -46,6 +46,9 @@ SIGNATURE = os.getenv("CHANNEL_SIGNATURE", "")         # например «👉
 # Доли форматов постов (в процентах). Меняйте как хотите.
 POST_TYPE_WEIGHTS = {"photo": 45, "album": 20, "video": 20, "mixed": 15}
 QUIZ_CHANCE = 0.3          # вероятность добавить викторину после поста
+# Публиковать ли выдержку из статьи без обработки, если нейросеть недоступна. По умолчанию нет:
+# лучше пропустить запуск, чем выложить сырой текст.
+ALLOW_RAW_POSTS = os.getenv("ALLOW_RAW_POSTS", "") == "1"
 
 # Источники фактов, их доли и фильтр тем — в sources.py, источники картинок — в media.py.
 
@@ -203,17 +206,24 @@ def write_post(src):
                 log(f"Текст написан: {name}")
                 return fact_check(post, src, name, fn)
             except requests.HTTPError as e:
-                code = e.response.status_code if e.response is not None else "?"
-                log(f"{name}: ошибка HTTP {code}")
-                if code == 429:          # лимит — подождать и повторить
+                code = e.response.status_code if e.response is not None else 0
+                detail = (e.response.text[:200] if e.response is not None else "")
+                log(f"{name}: ошибка HTTP {code} {detail}")
+                if code == 429 or code >= 500:   # лимит или сбой сервера — подождать и повторить
                     time.sleep(20 * (attempt + 1))
                     continue
                 break
             except (ValueError, KeyError, IndexError, requests.RequestException) as e:
                 log(f"{name}: {e}")
                 time.sleep(3)
-    log("Нейросети недоступны — публикую выдержку из статьи как есть")
-    return fallback_post(src)
+    if ALLOW_RAW_POSTS:
+        log("Нейросети недоступны — публикую выдержку из статьи как есть")
+        return fallback_post(src)
+    raise LLMUnavailable("нейросеть не ответила")
+
+
+class LLMUnavailable(Exception):
+    pass
 
 
 CHECK_PROMPT = """Ты строгий редактор-фактчекер. Сверь пост с исходным материалом.
@@ -380,7 +390,11 @@ def main():
     for attempt in range(3):
         src = sources.pick_source(state, exclude=tried)
         log(f"Формат: {kind}. Источник: {src['source']}. Материал: {src['title']}")
-        post = write_post(src)
+        try:
+            post = write_post(src)
+        except LLMUnavailable:
+            sys.exit("Нейросеть недоступна — пост пропущен, следующий запуск попробует снова. "
+                     "Причина — в строках выше.")
         if post is None:
             tried.add(src["id"])
             continue

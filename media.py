@@ -8,7 +8,7 @@
   NASA          космос              без ключа          (общественное достояние)
   Wikimedia     исторические фото   без ключа          только CC0 и общественное достояние
   Openverse     открытые фото       без ключа          только CC0 и общественное достояние
-  Pollinations  ИИ-иллюстрация      без ключа          только если ничего не нашлось
+  Pollinations  ИИ-иллюстрация      без ключа          выключено; AI_IMAGE_FALLBACK=1 включает
 Картинка из статьи Википедии используется, только если она тоже в общественном достоянии.
 
 Порядок источников зависит от темы поста (category), которую определяет нейросеть.
@@ -22,7 +22,7 @@ import requests
 
 PEXELS_KEY = os.getenv("PEXELS_API_KEY", "")
 PIXABAY_KEY = os.getenv("PIXABAY_API_KEY", "")
-AI_FALLBACK = os.getenv("AI_IMAGE_FALLBACK", "1") != "0"
+AI_FALLBACK = os.getenv("AI_IMAGE_FALLBACK", "0") == "1"   # ИИ-картинки: выключены, включить = "1"
 
 MAX_PHOTO_BYTES = 9_500_000
 MAX_VIDEO_BYTES = 48_000_000
