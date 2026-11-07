@@ -14,7 +14,11 @@
   "otd:1918:в Баварии свергнута правившая более 700 лет династия Виттель",
   "rss:https://nplus1.ru/news/2026/11/05/first-1000-days",
   "rss:https://www.sciencedaily.com/releases/2026/09/260914102429.htm",
-  "wiki:Bluenose"
+  "wiki:Bluenose",
+  "wiki:Утро стрелецкой казни",
+  "wiki:Усилитель Уильямсона",
+  "wiki:Убийство Зорана Джинджича",
+  "wiki:Уимблдонский турнир"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -33,10 +37,11 @@
   "commons:49179423",
   "nasa:PIA18918",
   "commons:163108912",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/The_Famous_Bluenose.jpg/1280px-The_Famous_Bluenose.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/The_Famous_Bluenose.jpg/1280px-The_Famous_Bluenose.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "pixabay-photo:2385378"
  ],
- "posts": 13,
- "last_post": "2026-11-07T22:28+03:00",
+ "posts": 14,
+ "last_post": "2026-11-07T22:32+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -45,6 +50,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
