@@ -33,8 +33,8 @@ PHOTO_ORDER = {
     "history": ["wikimedia", "openverse", "pixabay", "pexels"],
     "art":     ["wikimedia", "openverse", "pixabay", "pexels"],
     "nature":  ["pexels", "pixabay", "wikimedia", "openverse"],
-    "science": ["wikimedia", "pixabay", "pexels", "openverse", "nasa"],
-    "other":   ["pexels", "pixabay", "wikimedia", "openverse"],
+    "science": ["pixabay", "pexels", "nasa", "wikimedia", "openverse"],   # современные фото, не архив
+    "other":   ["pixabay", "pexels", "wikimedia", "openverse"],
 }
 CATEGORIES = tuple(PHOTO_ORDER)
 
@@ -224,10 +224,11 @@ STOP = {"the", "and", "with", "for", "from", "of", "in", "on", "a", "an", "old",
         "small", "close", "up", "view", "photo", "image", "picture", "beautiful", "background"}
 
 
-# Мрачные изображения не ставим никогда: покойники, похороны, кровь, казни.
+# Мрачные изображения не ставим никогда: покойники, похороны, кровь, казни, нищета и беженцы.
 MORBID = re.compile(
     r"coffin|casket|corpse|cadaver|dead body|deceased|funeral|post.?mortem|deathbed|lying in state|"
     r"memento mori|execution|hanged|gallows|blood|wound|autopsy|"
+    r"great depression|refugee|migrant|famine|starv|poverty|homeless|destitute|"
     r"гроб|покойн|похорон|труп|мертв|посмертн|казн[иь]|висел|кров[ьи]|ран[аеы]\b|вскрыт",
     re.IGNORECASE)
 
@@ -242,9 +243,16 @@ def relevant(item, query):
         return False
     if item.get("tags") is None:
         return True
+    return score(item, query) > 0
+
+
+def score(item, query):
+    """Сколько ключевых слов запроса есть в описании картинки."""
+    if item.get("tags") is None:
+        return 1
     tags = item["tags"].lower()
     words = [w for w in re.findall(r"[a-zа-яё]+", query.lower()) if len(w) > 2 and w not in STOP]
-    return any(w[:5] in tags for w in words) if words else False
+    return sum(w[:5] in tags for w in words)
 
 
 def _search(sources, order, queries, used, per_source=2):
@@ -263,6 +271,7 @@ def _search(sources, order, queries, used, per_source=2):
                 break
             fresh = [i for i in items[:10] if i["id"] not in seen and relevant(i, q)]
             random.shuffle(fresh)
+            fresh.sort(key=lambda i: -score(i, q))   # сначала те, где совпали все слова запроса
             for i in fresh[:per_source - taken]:
                 seen.add(i["id"])
                 found.append(i)

@@ -94,7 +94,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - Найди в материале самый неожиданный или удивительный факт и построй пост вокруг него.
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
 - text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом к читателям или неожиданным выводом.
-- hashtags: 2-3 тега на русском, одним словом каждый.
+- hashtags: 2-3 тега на русском, одним словом каждый. В text хэштеги НЕ пиши.
 - media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-2 слова: главный предмет поста, который буквально видно на фото (существительное). Примеры: "octopus", "opera house", "subway station", "comet". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
@@ -242,7 +242,9 @@ def build_caption(post, limit=CAPTION_LIMIT):
     tags = " ".join(t for t in tags.split() if len(t) > 1)
     footer = "\n\n".join(x for x in [tags, SIGNATURE] if x)
     title = trim(post["title"].strip(), 100)
-    body = trim(post["text"].strip(), max(limit - len(title) - len(footer) - 6, 100))
+    text = re.sub(r"(?m)^[ \t]*(#\w+[ \t]*)+$", "", post["text"])    # нейросеть иногда сама ставит теги
+    text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    body = trim(text, max(limit - len(title) - len(footer) - 6, 100))
     out = f"<b>{html.escape(title)}</b>\n\n{html.escape(body)}"
     return out + ("\n\n" + html.escape(footer) if footer else "")
 
