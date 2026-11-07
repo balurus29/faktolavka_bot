@@ -56,7 +56,8 @@ def _get(url, **kw):
 # ---------------------------------------------------------------- фото-источники
 # Каждая функция возвращает список {"id", "url", "credit", "tags"}.
 # tags — описание картинки у источника: по нему бот проверяет, что картинка правда по теме.
-# tags=None — источник сам ищет точно (Wikimedia по названию статьи), проверка не нужна.
+# Найденное по точному названию статьи помечается trusted: сверка слов не нужна,
+# но фильтр мрачных картинок действует всегда.
 
 def photos_pexels(q):
     if not PEXELS_KEY:
@@ -101,8 +102,8 @@ def photos_wikimedia(q):
         desc = " ".join(re.sub(r"<[^>]+>", " ", meta.get(k, {}).get("value", ""))
                         for k in ("ImageDescription", "ObjectName", "Categories"))
         out.append({"id": f"commons:{page['pageid']}", "url": info.get("thumburl") or info["url"],
-                    "credit": "Wikimedia Commons", "tags": None,
-                    "desc": f"{page.get('title', '')} {desc}"[:2000]})
+                    "credit": "Wikimedia Commons",
+                    "tags": f"{page.get('title', '')} {desc}"[:2000].replace("_", " ")})
     return out
 
 
@@ -229,12 +230,16 @@ MORBID = re.compile(
     r"coffin|casket|corpse|cadaver|dead body|deceased|funeral|post.?mortem|deathbed|lying in state|"
     r"memento mori|execution|hanged|gallows|blood|wound|autopsy|"
     r"great depression|refugee|migrant|famine|starv|poverty|homeless|destitute|"
+    r"september 11|9/11|9-11|ground zero|world trade center|terror|attack|bomb|explosion|blast|"
+    r"ruin|rubble|debris|wreck|disaster|catastroph|destroy|devastat|collaps|crash|burning|fire|flood|"
+    r"\bwar\b|wartime|soldier|military|army|troops|weapon|tank|battle|"
+    r"теракт|руин|обломк|разруш|катастроф|взрыв|пожар|авари|крушени|наводнени|войн|солдат|оружи|"
     r"гроб|покойн|похорон|труп|мертв|посмертн|казн[иь]|висел|кров[ьи]|ран[аеы]\b|вскрыт",
     re.IGNORECASE)
 
 
 def is_morbid(item):
-    return bool(MORBID.search(f"{item.get('tags') or ''} {item.get('desc') or ''}"))
+    return bool(MORBID.search(item.get("tags") or ""))
 
 
 # Стоковые фото людей-моделей — самая частая картинка «не в тему». Берём их, только если
@@ -251,19 +256,19 @@ def relevant(item, query):
     """Картинка подходит, если в её описании есть ВСЕ ключевые слова запроса (с учётом окончаний)."""
     if is_morbid(item):
         return False
-    if item.get("tags") is None:
+    if item.get("trusted"):
         return True
     words = _words(query)
-    if not words or PEOPLE.search(item["tags"]) and not PEOPLE.search(query):
+    if not words or PEOPLE.search(item.get("tags") or "") and not PEOPLE.search(query):
         return False
     return score(item, query) == len(words)
 
 
 def score(item, query):
     """Сколько ключевых слов запроса есть в описании картинки."""
-    if item.get("tags") is None:
+    if item.get("trusted"):
         return 1
-    tags = item["tags"].lower()
+    tags = (item.get("tags") or "").lower()
     return sum(w[:5] in tags for w in _words(query))
 
 
@@ -302,9 +307,17 @@ def collect_photos(src, post, state, n):
         candidates.append({"id": f"wiki-img:{src['image']}", "url": src["image"],
                            "credit": "Википедия"})
     queries = [q for q in post.get("media_queries", []) if q][:3]
-    if category in ("history", "art", "science"):
-        queries = [src["title"]] + queries   # Commons хорошо ищет по названию статьи
-    if queries:
+    if category in ("history", "art", "science") and src.get("source") in ("wiki_ru", "wiki_en", "onthisday"):
+        # Wikimedia точно находит картинки по названию статьи — им сверка слов не нужна
+        try:
+            for item in photos_wikimedia(src["title"])[:6]:
+                if item["id"] not in state["used_media"] and not is_morbid(item):
+                    candidates.append({**item, "trusted": True})
+                    if len(candidates) >= n:
+                        break
+        except (requests.RequestException, ValueError, KeyError) as e:
+            log(f"wikimedia: недоступен ({e.__class__.__name__})")
+    if queries and len(candidates) < n:
         candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"],
                               per_source=max(1, n - 1))
     if AI_FALLBACK and not candidates and queries:   # ничего подходящего — рисуем иллюстрацию
