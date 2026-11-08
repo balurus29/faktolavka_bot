@@ -121,7 +121,8 @@ def photos_wikimedia(q):
         info = (page.get("imageinfo") or [{}])[0]
         meta = info.get("extmetadata", {})
         lic = meta.get("LicenseShortName", {}).get("value", "")
-        if info.get("mime") not in ("image/jpeg", "image/png") or (info.get("width") or 0) < 600:
+        # Только JPEG: схемы, карты, формулы и логотипы почти всегда в PNG/SVG, а фото — в JPEG
+        if info.get("mime") != "image/jpeg" or (info.get("width") or 0) < 600:
             continue
         ok, attrib = license_check(lic, strip_tags(meta.get("Artist", {}).get("value", "")),
                                    "Wikimedia Commons")
@@ -144,7 +145,7 @@ def photos_openverse(q):
         lic = f"cc {r.get('license', '')} {r.get('license_version') or ''}".replace("cc cc0", "cc0") \
             .replace("cc pdm", "pdm")
         ok, attrib = license_check(lic, r.get("creator") or "", (r.get("source") or "Openverse").title())
-        if r.get("url") and ok:
+        if r.get("url") and ok and (r.get("filetype") in (None, "jpg", "jpeg")):
             out.append({"id": f"openverse:{r['id']}", "url": r["url"], "credit": "Openverse",
                         "attrib": attrib,
                         "tags": (r.get("title") or "") + " " +
@@ -284,7 +285,8 @@ RACY = re.compile(
 # Не фото: значки, флаги, гербы, логотипы, карты, схемы, графики.
 NOT_PHOTO = re.compile(
     r"\.svg|shield|\bsign\b|logo|emblem|\bflag|coat of arms|\bseal of|\bmap\b|locator|diagram|"
-    r"chart|graph|route marker|\bicon\b|герб|флаг|логотип|эмблем|карта|схема|диаграмм|значок",
+    r"chart|graph|route marker|\bicon\b|reaction|mechanism|pathway|formula|structural|"
+    r"герб|флаг|логотип|эмблем|карта|схема|диаграмм|значок",
     re.IGNORECASE)
 
 
@@ -355,19 +357,21 @@ def collect_photos(src, post, state, n):
     if category == "other" and src.get("category") in CATEGORIES:
         category = src["category"]
     candidates = []
-    if src.get("image") and src.get("image_ok"):     # картинка из самой статьи — точно по теме
+    lead_is_photo = re.search(r"\.jpe?g$", src.get("image_file") or "", re.IGNORECASE)
+    if src.get("image") and src.get("image_ok") and lead_is_photo:   # картинка из самой статьи — точно по теме
         candidates.append({"id": f"wiki-img:{src['image']}", "url": src["image"],
                            "credit": "Википедия", "attrib": src.get("image_attrib"),
                            "tags": src.get("image_file") or ""})
     queries = [q for q in post.get("media_queries", []) if q][:3]
-    if src.get("source") in ("wiki_ru", "wiki_en", "onthisday") and len(candidates) < n:
+    # Из поиска по названию статьи — не больше одной картинки, иначе альбом выходит однообразным
+    # (три портрета одного человека). Остальное — по запросам нейросети о разных сторонах темы.
+    if src.get("source") in ("wiki_ru", "wiki_en", "onthisday", "dyk_ru", "dyk_en") and not candidates:
         # Wikimedia точно находит картинки по названию статьи — им сверка слов не нужна
         try:
             for item in photos_wikimedia(src["title"])[:6]:
                 if item["id"] not in state["used_media"] and not is_morbid(item):
                     candidates.append({**item, "trusted": True})
-                    if len(candidates) >= n:
-                        break
+                    break
         except (requests.RequestException, ValueError, KeyError) as e:
             log(f"wikimedia: недоступен ({e.__class__.__name__})")
     if queries and len(candidates) < n:
