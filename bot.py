@@ -533,6 +533,11 @@ def main():
         src["image_ok"], src["image_attrib"] = media.image_license(src)
 
     photos, video = [], None
+    if kind in ("album", "mixed") and post["category"] not in ("nature", "space"):
+        # На абстрактных темах (технологии, общество, история) второе и третье фото почти всегда
+        # случайные. Несколько картинок — только для природы и космоса, где фотостоки надёжны.
+        log(f"Тема «{post['category']}» — вместо альбома одно фото")
+        kind = "photo"
     if kind in ("photo", "album", "mixed"):
         photos = media.collect_photos(src, post, state, {"photo": 1, "album": 3, "mixed": 2}[kind])
     if kind in ("video", "mixed"):
