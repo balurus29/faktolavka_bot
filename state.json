@@ -117,7 +117,8 @@
   "rss:https://www.sciencedaily.com/releases/2026/09/260903064229.htm",
   "wiki:Сазонова, Нина Афанасьевна",
   "wiki:en:Venus",
-  "rss:https://www.techinsider.ru/editorial/1749069-pochemu-osenyu-listya-menyayut-cvet/"
+  "rss:https://www.techinsider.ru/editorial/1749069-pochemu-osenyu-listya-menyayut-cvet/",
+  "rss:https://www.sciencedaily.com/releases/2026/10/261014001406.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -227,13 +228,13 @@
   "commons:26002",
   "nasa:PIA12517",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/0/08/Venus_from_Mariner_10.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
-  "pixabay-video:189819"
+  "pixabay-video:189819",
+  "pixabay-photo:2508874"
  ],
- "posts": 80,
- "last_post": "2026-11-08T23:51+03:00",
+ "posts": 81,
+ "last_post": "2026-11-08T23:54+03:00",
  "recent_topics": [
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -241,6 +242,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
