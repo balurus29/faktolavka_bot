@@ -73,7 +73,9 @@
   "dyk:en:... that former President of the Senate of Jamaica Syringa Marshall-Burnett appl",
   "rss:https://habr.com/ru/articles/1084038/?utm_campaign=1084038&utm_source=habrahabr&utm_medium=rss",
   "dyk:en:... that \"Kiss Me More\" interpolates the melody from \"Physical\" by Olivia Newton",
-  "wiki:Белая акула"
+  "wiki:Белая акула",
+  "otd:1923:«Пивной путч» в Мюнхене.",
+  "wiki:Чернопёрая акула"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -152,14 +154,14 @@
   "commons:157890662",
   "pixabay-photo:11646",
   "commons:55548039",
-  "commons:149492955"
+  "commons:149492955",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg/1280px-Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 53,
- "last_post": "2026-11-08T18:37+03:00",
+ "posts": 54,
+ "last_post": "2026-11-08T19:01+03:00",
  "recent_topics": [
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -176,6 +178,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general"
  ]
 }
