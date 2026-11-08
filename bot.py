@@ -293,11 +293,13 @@ def trim(text, limit):
     return cut.rsplit(" ", 1)[0].rstrip(",;:—-") + "…"
 
 
-def build_caption(post, limit=CAPTION_LIMIT):
-    """Заголовок, текст, хэштеги и подпись канала. Источники и авторы медиа не указываются."""
+def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
+    """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
     tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
     tags = " ".join(t for t in tags.split() if len(t) > 1)
-    footer = "\n\n".join(x for x in [tags, SIGNATURE] if x)
+    attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
+    credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
+    footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
     title = trim(post["title"].strip(), 100)
     text = re.sub(r"(?m)^[ \t]*(#\w+[ \t]*)+$", "", post["text"])    # нейросеть иногда сама ставит теги
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
@@ -408,8 +410,10 @@ def main():
         state["used_sources"].append(src["id"])
     else:
         sys.exit("Не удалось подобрать подходящий материал")
-    if src.get("image") and not src.get("image_free"):
-        src["image_free"] = media.image_is_free(src)
+    if src.get("image_free"):                       # снимок NASA и т. п. — свободный
+        src["image_ok"], src["image_attrib"] = True, None
+    elif src.get("image"):
+        src["image_ok"], src["image_attrib"] = media.image_license(src)
 
     photos, video = [], None
     if kind in ("photo", "album", "mixed"):
@@ -419,7 +423,8 @@ def main():
         if not video and kind == "video":           # видео не нашлось — хотя бы фото
             photos = media.collect_photos(src, post, state, 1)
 
-    caption = build_caption(post, limit=4000 if not photos and not video else CAPTION_LIMIT)
+    caption = build_caption(post, limit=4000 if not photos and not video else CAPTION_LIMIT,
+                            media_items=photos + [video])
 
     if args.dry_run:
         print("\n" + "=" * 60 + f"\nФормат: {kind} | тема: {post['category']} | {src['topic']} | фото: {len(photos)} | видео: {bool(video)}")
