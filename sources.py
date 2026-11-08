@@ -7,7 +7,8 @@
   wiki_ru      избранные и хорошие статьи русской Википедии
   onthisday    «В этот день» из русской Википедии
   wiki_en      избранные и хорошие статьи английской Википедии (бот переводит)
-  rss_ru       научно-популярные сайты на русском (Naked Science, N+1)
+  rss_ru       научпоп на русском: Naked Science, N+1, Элементы, Популярная механика, Наука и жизнь,
+               Кот Шрёдингера, научно-популярные хабы Хабра (без программирования)
   rss_en       необычные новости науки на английском (ScienceDaily, Atlas Obscura, Smithsonian)
   apod         «Космическая картинка дня» NASA
 
@@ -33,9 +34,18 @@ SOURCE_WEIGHTS = {"dyk_ru": 25, "dyk_en": 20, "wiki_ru": 12, "onthisday": 8, "wi
                   "rss_ru": 13, "rss_en": 10, "apod": 7}
 
 RSS_FEEDS = {
+    # Элемент — адрес ленты или кортеж из нескольких вариантов адреса: бот пробует их по очереди.
     "rss_ru": [
         "https://naked-science.ru/allrss",
         "https://nplus1.ru/rss",
+        "https://elementy.ru/rss/news",
+        ("https://www.popmech.ru/out/public-all.xml", "https://www.popmech.ru/rss/"),
+        ("https://www.nkj.ru/rss/", "https://www.nkj.ru/news/rss/"),
+        ("https://kot.sh/rss.xml", "https://kot.sh/rss"),
+        # Хабр — только научно-популярные хабы, без программирования
+        *[(f"https://habr.com/ru/rss/hubs/{hub}/articles/?fl=ru",
+           f"https://habr.com/ru/rss/hub/{hub}/all/?fl=ru")
+          for hub in ("popular_science", "space", "biology", "physics", "history", "astronomy")],
     ],
     "rss_en": [
         "https://www.sciencedaily.com/rss/strange_offbeat.xml",
@@ -265,13 +275,17 @@ def rss(state, group):
     feeds = RSS_FEEDS[group][:]
     random.shuffle(feeds)
     lang = "ru" if group == "rss_ru" else "en"
-    for feed in feeds:
-        try:
-            r = session.get(feed, timeout=30)
-            r.raise_for_status()
-            items = parse_feed(r.content)
-        except (requests.RequestException, ET.ParseError) as e:
-            log(f"Лента {feed} недоступна: {e.__class__.__name__}")
+    for feed in feeds[:4]:
+        items = None
+        for url in (feed if isinstance(feed, tuple) else (feed,)):
+            try:
+                r = session.get(url, timeout=30)
+                r.raise_for_status()
+                items = parse_feed(r.content)
+                break
+            except (requests.RequestException, ET.ParseError) as e:
+                log(f"Лента {url} недоступна: {e.__class__.__name__}")
+        if not items:
             continue
         random.shuffle(items)
         for it in items[:8]:
