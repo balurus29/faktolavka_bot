@@ -450,7 +450,9 @@ def collect_photos(src, post, state, n):
         if len(photos) >= n:
             break
         if category != "space" and NOT_EARTH.search(c.get("tags") or ""):
-            continue                             # снимки других планет к земной теме («полярный вихрь» Титана)
+            continue
+        if category in ("nature", "space", "science") and RELIGIOUS.search(c.get("tags") or ""):
+            continue                             # змея Васуки — не храм змея-божества                             # снимки других планет к земной теме («полярный вихрь» Титана)
         try:
             data = c.get("data") or download(c["url"], MAX_PHOTO_BYTES)
         except (requests.RequestException, ValueError) as e:
@@ -466,6 +468,9 @@ def collect_photos(src, post, state, n):
     return photos
 
 
+RELIGIOUS = re.compile(r"\b(temple|church|mosque|shrine|cathedral|monastery|chapel|deity|idol|"
+                       r"hindu|jain|buddhist|mythology)\b|храм|церк|мечет|собор|монастыр|божеств|мифолог",
+                       re.IGNORECASE)
 NOT_EARTH = re.compile(r"\b(titan|saturn|jupiter|neptune|uranus|pluto|cassini|juno probe|voyager|"
                        r"hubble|nebula|galaxy|exoplanet|mars rover|martian)\b", re.IGNORECASE)
 
