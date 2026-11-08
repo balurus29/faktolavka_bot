@@ -1,15 +1,16 @@
 """
 Поиск картинок и видео сразу в нескольких бесплатных источниках.
 
-Под постами авторы медиа не подписываются, поэтому бот берёт только то,
-что разрешено использовать БЕЗ указания автора:
+Фото под лицензиями CC BY / CC BY-SA бот берёт с подписью «📷 автор, лицензия» под постом
+(PHOTO_CREDITS=0 выключает подпись — тогда только то, что можно без указания автора).
+Без подписи можно:
   Pexels        фото + видео        PEXELS_API_KEY     (лицензия Pexels)
   Pixabay       фото + видео        PIXABAY_API_KEY    (лицензия Pixabay)
   NASA          космос              без ключа          (общественное достояние)
-  Wikimedia     исторические фото   без ключа          только CC0 и общественное достояние
-  Openverse     открытые фото       без ключа          только CC0 и общественное достояние
+  Wikimedia     фото по теме статьи без ключа          CC0/общ. достояние; CC BY и BY-SA — с подписью
+  Openverse     открытые фото       без ключа          CC0/общ. достояние; CC BY и BY-SA — с подписью
   Pollinations  ИИ-иллюстрация      без ключа          выключено; AI_IMAGE_FALLBACK=1 включает
-Картинка из статьи Википедии используется, только если она тоже в общественном достоянии.
+Картинка из самой статьи Википедии идёт первой — она точнее всего по теме.
 
 Порядок источников зависит от темы поста (category), которую определяет нейросеть.
 """
@@ -80,7 +81,29 @@ def photos_pixabay(q):
             for h in data.get("hits", [])]
 
 
+# Подпись «📷 автор, лицензия» под постом. Пока она включена, бот может брать фото под
+# лицензиями CC BY и CC BY-SA — это миллионы точных снимков из Wikimedia и Flickr.
+PHOTO_CREDITS = os.getenv("PHOTO_CREDITS", "1") != "0"
+
 FREE_LICENSE = re.compile(r"\bcc0\b|public domain|\bpd\b|\bpd-|\bpdm\b|no restrictions")  # без указания автора
+ATTRIB_LICENSE = re.compile(r"\bcc[ -]by\b")                   # CC BY, CC BY-SA любых версий
+NON_COMMERCIAL = re.compile(r"\bn[cd]\b|[ -]n[cd]\b|noncommercial|noderiv")
+
+
+def strip_tags(s):
+    return " ".join(re.sub(r"<[^>]+>", " ", s or "").split())
+
+
+def license_check(lic, author, site):
+    """(можно ли брать, подпись или None). Лицензии NC/ND и GFDL не берём."""
+    lic_l = lic.lower()
+    if FREE_LICENSE.search(lic_l):
+        return True, None
+    if PHOTO_CREDITS and ATTRIB_LICENSE.search(lic_l) and not NON_COMMERCIAL.search(lic_l):
+        author = author.strip()[:40] or "автор неизвестен"
+        name = re.sub(r"-(\d)", r" \1", lic.strip().upper().replace("CC-BY", "CC BY"))
+        return True, f"{author}, {name}, {site}"
+    return False, None
 
 
 def photos_wikimedia(q):
@@ -93,29 +116,36 @@ def photos_wikimedia(q):
     for page in data.get("query", {}).get("pages", []):
         info = (page.get("imageinfo") or [{}])[0]
         meta = info.get("extmetadata", {})
-        lic = meta.get("LicenseShortName", {}).get("value", "").lower() + " " + \
-            meta.get("License", {}).get("value", "").lower()
+        lic = meta.get("LicenseShortName", {}).get("value", "")
         if info.get("mime") not in ("image/jpeg", "image/png") or (info.get("width") or 0) < 600:
             continue
-        if not FREE_LICENSE.search(lic):
+        ok, attrib = license_check(lic, strip_tags(meta.get("Artist", {}).get("value", "")),
+                                   "Wikimedia Commons")
+        if not ok:
             continue
         desc = " ".join(re.sub(r"<[^>]+>", " ", meta.get(k, {}).get("value", ""))
                         for k in ("ImageDescription", "ObjectName", "Categories"))
         out.append({"id": f"commons:{page['pageid']}", "url": info.get("thumburl") or info["url"],
-                    "credit": "Wikimedia Commons",
+                    "credit": "Wikimedia Commons", "attrib": attrib,
                     "tags": f"{page.get('title', '')} {desc}"[:2000].replace("_", " ")})
     return out
 
 
 def photos_openverse(q):
     data = _get("https://api.openverse.org/v1/images/", params={
-        "q": q, "license": "cc0,pdm", "page_size": 12, "mature": "false",
-        "aspect_ratio": "wide,square"})
-    return [{"id": f"openverse:{r['id']}", "url": r["url"],
-             "credit": f"{r.get('creator') or 'автор'} / {r.get('source', 'Openverse')}, "
-                       f"{(r.get('license') or '').upper()}",
-             "tags": (r.get("title") or "") + " " + " ".join(t.get("name", "") for t in r.get("tags") or [])}
-            for r in data.get("results", []) if r.get("url")]
+        "q": q, "license": "cc0,pdm,by,by-sa" if PHOTO_CREDITS else "cc0,pdm",
+        "page_size": 12, "mature": "false", "aspect_ratio": "wide,square"})
+    out = []
+    for r in data.get("results", []):
+        lic = f"cc {r.get('license', '')} {r.get('license_version') or ''}".replace("cc cc0", "cc0") \
+            .replace("cc pdm", "pdm")
+        ok, attrib = license_check(lic, r.get("creator") or "", (r.get("source") or "Openverse").title())
+        if r.get("url") and ok:
+            out.append({"id": f"openverse:{r['id']}", "url": r["url"], "credit": "Openverse",
+                        "attrib": attrib,
+                        "tags": (r.get("title") or "") + " " +
+                                " ".join(t.get("name", "") for t in r.get("tags") or [])})
+    return out
 
 
 def photos_nasa(q):
@@ -189,21 +219,20 @@ def videos_pixabay(q):
 VIDEO_SOURCES = {"pexels": videos_pexels, "pixabay": videos_pixabay}
 
 
-def image_is_free(src):
-    """Проверяет лицензию главной картинки статьи Википедии: можно ли без указания автора."""
+def image_license(src):
+    """Лицензия главной картинки статьи Википедии: (можно ли брать, подпись или None)."""
     name = src.get("image_file")
     if not name:
-        return False
+        return False, None
     try:
         data = _get(f"https://{src.get('lang', 'ru')}.wikipedia.org/w/api.php", params={
             "action": "query", "format": "json", "formatversion": 2,
             "titles": f"File:{name}", "prop": "imageinfo", "iiprop": "extmetadata"})
         meta = data["query"]["pages"][0]["imageinfo"][0]["extmetadata"]
     except (requests.RequestException, KeyError, IndexError, ValueError):
-        return False
-    lic = (meta.get("LicenseShortName", {}).get("value", "") + " " +
-           meta.get("License", {}).get("value", "")).lower()
-    return bool(FREE_LICENSE.search(lic))
+        return False, None
+    return license_check(meta.get("LicenseShortName", {}).get("value", ""),
+                         strip_tags(meta.get("Artist", {}).get("value", "")), "Wikimedia Commons")
 
 
 # ---------------------------------------------------------------- сбор
@@ -315,11 +344,12 @@ def collect_photos(src, post, state, n):
     if category == "other" and src.get("category") in CATEGORIES:
         category = src["category"]
     candidates = []
-    if src.get("image") and src.get("image_free"):   # картинка из самой статьи — точно по теме
+    if src.get("image") and src.get("image_ok"):     # картинка из самой статьи — точно по теме
         candidates.append({"id": f"wiki-img:{src['image']}", "url": src["image"],
-                           "credit": "Википедия"})
+                           "credit": "Википедия", "attrib": src.get("image_attrib"),
+                           "tags": src.get("image_file") or ""})
     queries = [q for q in post.get("media_queries", []) if q][:3]
-    if category in ("history", "art", "science") and src.get("source") in ("wiki_ru", "wiki_en", "onthisday"):
+    if src.get("source") in ("wiki_ru", "wiki_en", "onthisday") and len(candidates) < n:
         # Wikimedia точно находит картинки по названию статьи — им сверка слов не нужна
         try:
             for item in photos_wikimedia(src["title"])[:6]:

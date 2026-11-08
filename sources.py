@@ -81,6 +81,14 @@ POP_WORDS = re.compile(
     re.IGNORECASE)
 
 
+# Заметки, в которых обычно нет удивительного факта: рецепты, покупки, советы, обзоры.
+BORING_TITLE = re.compile(
+    r"recipe|how to\b|\btips\b|gift guide|\bdeals?\b|\bsale\b|review|best .* to buy|podcast|newsletter|"
+    r"webinar|giveaway|sponsored|рецепт|как приготовить|советы|скидк|распродаж|обзор|подкаст|вебинар|"
+    r"конкурс|розыгрыш|реклам",
+    re.IGNORECASE)
+
+
 def is_blocked(text, lead_chars=500, any_chars=4000):
     return bool(BLOCK_ANYWHERE.search(text[:any_chars]) or BLOCK_IN_LEAD.search(text[:lead_chars]))
 
@@ -258,7 +266,7 @@ def rss(state, group):
         random.shuffle(items)
         for it in items[:8]:
             sid = f"rss:{it['link']}"
-            if not it["link"] or sid in state["used_sources"]:
+            if not it["link"] or sid in state["used_sources"] or BORING_TITLE.search(it["title"]):
                 continue
             try:
                 text = page_text(it["link"])
