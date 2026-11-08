@@ -56,7 +56,9 @@
   "dyk:en:... that Bob Moore did not found Bob's Red Mill until after his first retirement",
   "wiki:Чесменская колонна",
   "wiki:Чандарлы Халил-паша",
-  "dyk:en:... that at the end of The Beatles' rooftop concert, John Lennon jokingly said, "
+  "dyk:en:... that at the end of The Beatles' rooftop concert, John Lennon jokingly said, ",
+  "wiki:Batman: Arkham Knight",
+  "rss:https://habr.com/ru/articles/1104878/?utm_campaign=1104878&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -120,10 +122,13 @@
   "pixabay-photo:7974363",
   "pixabay-photo:3412256",
   "commons:31948587",
-  "commons:31219357"
+  "commons:31219357",
+  "nasa:AFRC2020-0025-10",
+  "nasa:GSFC_20171208_Archive_e000407",
+  "commons:46895815"
  ],
- "posts": 42,
- "last_post": "2026-11-08T16:45+03:00",
+ "posts": 43,
+ "last_post": "2026-11-08T16:49+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -138,8 +143,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
