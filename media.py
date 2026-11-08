@@ -110,6 +110,7 @@ def license_check(lic, author, site):
         return True, None
     if PHOTO_CREDITS and ATTRIB_LICENSE.search(lic_l) and not NON_COMMERCIAL.search(lic_l):
         author = re.sub(r"\s+", " ", author)
+        author = re.sub(r"\(\s+", "(", re.sub(r"\s+\)", ")", author))
         author = re.sub(r",?\s*\d{4}[-./]\d{2}[-./]\d{2}(?:[ T]\d{1,2}:\d{2}(?::\d{2})?)?", "", author)  # даты съёмки
         author = re.sub(r"^[\s/|,;:\-–—]+|[\s/|,;:\-–—]+$", "", author)   # мусорные разделители по краям
         if len(author) > 50:
@@ -358,7 +359,7 @@ def _search(sources, order, queries, used, per_source=2):
             fresh = [i for i in items[:10] if i["id"] not in seen and relevant(i, q)]
             random.shuffle(fresh)
             fresh.sort(key=lambda i: -score(i, q))   # сначала те, где совпали все слова запроса
-            for i in fresh[:per_source - taken]:
+            for i in fresh[:1]:                  # с одного запроса — одна картинка, иначе альбом из близнецов
                 seen.add(i["id"])
                 found.append(i)
                 taken += 1
@@ -406,17 +407,42 @@ def collect_photos(src, post, state, n):
     if AI_FALLBACK and not candidates and queries:   # ничего подходящего — рисуем иллюстрацию
         candidates.append(photo_ai(post.get("image_prompt") or queries[-1]))
 
-    photos = []
+    photos, hashes = [], []
     for c in candidates:
         if len(photos) >= n:
             break
+        if category != "space" and NOT_EARTH.search(c.get("tags") or ""):
+            continue                             # снимки других планет к земной теме («полярный вихрь» Титана)
         try:
             data = download(c["url"], MAX_PHOTO_BYTES)
         except (requests.RequestException, ValueError) as e:
             log(f"Пропускаю картинку ({c['credit']}): {e}")
             continue
+        h = image_hash(data)
+        if h is not None and any(bin(h ^ x).count("1") <= 8 for x in hashes):
+            log("Пропускаю почти одинаковую картинку")
+            continue
+        if h is not None:
+            hashes.append(h)
         photos.append({**c, "data": data, "name": f"p{len(photos)}.jpg"})
     return photos
+
+
+NOT_EARTH = re.compile(r"\b(titan|saturn|jupiter|neptune|uranus|pluto|cassini|juno probe|voyager|"
+                       r"hubble|nebula|galaxy|exoplanet|mars rover|martian)\b", re.IGNORECASE)
+
+
+def image_hash(data):
+    """Средний хэш 8x8: у почти одинаковых картинок он почти совпадает. Без Pillow — пропускаем."""
+    try:
+        from io import BytesIO
+        from PIL import Image
+        img = Image.open(BytesIO(data)).convert("L").resize((8, 8))
+        px = list(img.getdata())
+        avg = sum(px) / 64
+        return sum(1 << i for i, p in enumerate(px) if p > avg)
+    except Exception:
+        return None
 
 
 def collect_video(post, state):

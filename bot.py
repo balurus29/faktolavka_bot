@@ -109,6 +109,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - Пиши своими словами, не копируй фразы из материала. Материал может быть на английском, пост всегда на русском.
 - Не упоминай источник, сайт, журнал или автора материала. Не пиши «учёные недавно выяснили», если в материале нет даты.
 - Не касайся политики, религии, войн и тем сексуальности.
+- Для исторических событий не начинай со слова «Сегодня»: пиши «8 ноября 1793 года…» или «В этот день в 1793 году…».
 - Сегодня {today}. Не считай сам, сколько лет прошло: не пиши «исполнилось N лет» или «N лет назад». Пиши «в этот день в 1929 году» или просто год.
 - Если в материале есть строка «ГЛАВНЫЙ ФАКТ» — построй пост именно вокруг него, а статью используй для подробностей.
 - Иначе найди в материале самый неожиданный или удивительный факт и построй пост вокруг него. Строй пост вокруг жизни, открытий и достижений, а не вокруг смерти, могил, болезней или несчастий, даже если они есть в материале.
@@ -319,17 +320,33 @@ def fix_opening(post, fn):
     first_sentence = re.split(r"(?<=[.!?])\s", paras[0], 1)[0]
     if not needs_new_opening(paras[0]):
         return post
-    try:
-        new = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        new = ""
-    if new and not needs_new_opening(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
+    new = ""
+    for attempt in range(2):                         # две попытки переписать
+        try:
+            cand = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
+        except (requests.RequestException, ValueError, KeyError, IndexError):
+            continue
+        first_new = re.split(r"(?<=[.!?])\s", cand, 1)[0]
+        # для переписанной фразы проверка мягче: главное — не начинаться с отсылки
+        if cand and not DANGLING.match(cand) and not re.search(r"\bименно так\w*", first_new, re.I) \
+                and not re.match(r"^(а|и|но|да|ведь|вот)\b", cand, re.I) and 0.4 < len(cand) / max(len(paras[0]), 1) < 4:
+            new = cand
+            break
+    if new:
         log("Первая фраза переписана: была отсылка к заголовку")
         paras[0] = new
     else:
-        title = re.sub(r"^[^\w«]+", "", post["title"]).rstrip(".!?")
-        log("Первая фраза отсылала к заголовку — добавил заголовок в начало")
-        paras[0] = f"{title}. {paras[0][0].upper()}{paras[0][1:]}"
+        # Запасной вариант: убираем фразу-отсылку, если без неё остаётся связный текст
+        rest = re.split(r"(?<=[.!?])\s+", paras[0], 1)
+        tail = rest[1] if len(rest) > 1 else ""
+        others = paras[1] if len(paras) > 1 else ""
+        if len(tail + others) > 250 and not needs_new_opening(tail or others):
+            log("Первая фраза отсылала к заголовку — убрал её")
+            paras = [p for p in (tail, others) if p]
+        else:
+            title = re.sub(r"^[^\w«]+", "", post["title"]).rstrip(".!?")
+            log("Первая фраза отсылала к заголовку — добавил заголовок в начало")
+            paras[0] = f"{title}. {paras[0][0].upper()}{paras[0][1:]}"
     return {**post, "text": "\n\n".join(paras)}
 
 
@@ -385,6 +402,8 @@ def clean_text(text, title=""):
     text = re.sub(r"[^.!?\n]*(?:в комментари|комментируйте|делитесь|поделитесь|пишите,|напишите,|"
                   r"ставьте|поставьте реакц|перешлите)[^.!?\n]*(?:[.!?]+|$)[ \t]*[^\s\w]*", "", text,
                   flags=re.IGNORECASE | re.MULTILINE)
+    # «Сегодня, 8 ноября 1793 года, произошло…» звучит так, будто это происходит сейчас
+    text = re.sub(r"(?m)^Сегодня,\s*(\d{1,2}\s+[а-я]+\s+\d{3,4}\s+года),?\s*", r"\1 ", text)
     text = re.sub(r"[ \t]+\n", "\n", text)
     paras = [p for p in re.split(r"\n\s*\n", text.strip()) if p.strip()]
     if len(paras) >= 3 and paras[-1].rstrip().endswith("?") and paras[-2].rstrip().rstrip("🌊🤔😉🙂").rstrip().endswith("?"):
