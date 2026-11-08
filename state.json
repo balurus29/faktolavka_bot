@@ -104,7 +104,8 @@
   "wiki:Фолклендский бой",
   "wiki:Фиксин, Сергей Андреевич",
   "dyk:en:... that \"I Know What You'll Do Next Summer\", an episode of Veronica Mars, inclu",
-  "dyk:en:... that Voyager&nbsp;1 crossed the Solar System's termination shock without det"
+  "dyk:en:... that Voyager&nbsp;1 crossed the Solar System's termination shock without det",
+  "rss:https://www.techinsider.ru/news/news-1748973-fiziki-stalkivaya-yadra-kisloroda-vossozdali-veshchestvo-pervyh-mgnovenii-vselennoi/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -203,12 +204,12 @@
   "commons:30142747",
   "commons:44469863",
   "card:dyk:en:... that \"I Know What You'll Do Next Summer\", an epis",
-  "commons:127298066"
+  "commons:127298066",
+  "commons:48425025"
  ],
- "posts": 70,
- "last_post": "2026-11-08T21:46+03:00",
+ "posts": 71,
+ "last_post": "2026-11-08T21:52+03:00",
  "recent_topics": [
-  "general",
   "pop",
   "general",
   "general",
@@ -227,6 +228,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general"
  ]
 }
