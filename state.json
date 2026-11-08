@@ -83,7 +83,10 @@
   "rss:https://habr.com/ru/articles/1104974/?utm_campaign=1104974&utm_source=habrahabr&utm_medium=rss",
   "wiki:ФК «Манчестер Юнайтед» в сезоне 2016/2017",
   "rss:https://www.smithsonianmag.com/smart-news/the-arctic-polar-vortex-is-collapsing-earlier-in-the-season-than-ever-documented-but-we-dont-know-how-itll-affect-global-weather-180989818/",
-  "dyk:en:... that Romeyn Beck Hough American Woods is a set of over 1,000 paper-thin wood"
+  "dyk:en:... that Romeyn Beck Hough American Woods is a set of over 1,000 paper-thin wood",
+  "wiki:Нерва",
+  "wiki:На дне (фильм, 1936)",
+  "otd:1793:Лувр прекратил быть королевским дворцом и стал публичным муз"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -169,10 +172,11 @@
   "commons:41907258",
   "commons:25562960",
   "commons:25562959",
-  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/46/RomeynHough.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/46/RomeynHough.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Louvre_Museum_Wikimedia_Commons.jpg/1280px-Louvre_Museum_Wikimedia_Commons.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 58,
- "last_post": "2026-11-08T19:44+03:00",
+ "posts": 59,
+ "last_post": "2026-11-08T19:47+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -186,8 +190,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
