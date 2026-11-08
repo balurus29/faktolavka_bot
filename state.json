@@ -62,7 +62,8 @@
   "wiki:Фальшивые зеркала",
   "rss:https://www.sciencedaily.com/releases/2026/04/260402042731.htm",
   "dyk:en:... that the leaves of two species of the fossil plant genus Banksieaeformis res",
-  "wiki:Эйнштейн, Альберт"
+  "wiki:Эйнштейн, Альберт",
+  "rss:https://habr.com/ru/companies/selectel/articles/1096308/?utm_campaign=1096308&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -133,10 +134,11 @@
   "commons:55217676",
   "openverse:2515a8ec-7a9c-4161-918d-03fcddd82971",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Albert_Einstein_Head_cleaned.jpg/1280px-Albert_Einstein_Head_cleaned.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "pixabay-photo:3523491"
+  "pixabay-photo:3523491",
+  "commons:79275382"
  ],
- "posts": 46,
- "last_post": "2026-11-08T17:09+03:00",
+ "posts": 47,
+ "last_post": "2026-11-08T17:48+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -147,8 +149,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
