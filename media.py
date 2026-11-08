@@ -628,4 +628,4 @@ def generate_cf(prompt):
         return None
     log("Нарисовал иллюстрацию нейросетью Cloudflare")
     return {"id": f"ai-cf:{abs(hash(prompt))}", "url": "", "data": data, "credit": "Cloudflare AI",
-            "attrib": "🎨 Иллюстрация создана нейросетью", "trusted": True, "tags": prompt}
+            "attrib": None, "trusted": True, "tags": prompt}
