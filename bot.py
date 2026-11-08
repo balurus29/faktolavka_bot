@@ -97,6 +97,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
   3 — «дорога проходит через несколько городов и поворачивает на север»; «музей открылся в 1929 году»;
   4 — «в турнире играют на траве, призовой фонд — миллионы»;
   3 — учебный материал без простого «ого»: биохимические реакции, формулы, термины, устройство механизмов;
+  3 — общеизвестное, что проходят в школе или знает почти каждый: «теория относительности изменила физику», «Земля вращается вокруг Солнца»;
   8 — «тихоходки выживают в открытом космосе»; «осьминоги меняют цвет во сне»;
   9 — «в Средние века животных судили в суде, с адвокатами и приговорами».
   Не придумывай удивительность там, где её нет, и не натягивай заголовок.
@@ -272,6 +273,19 @@ CHECK_PROMPT = """Ты строгий редактор-фактчекер. Св�
 DANGLING = re.compile(r"^\W*(она|он|оно|они|её|его|их|это|этот|эта|эти|этим|именно|так|такой|такая|"
                       r"такое|такие|таким|там|тогда|здесь|поэтому)\b", re.IGNORECASE)
 
+PRONOUN = re.compile(r"^(он|она|оно|они|его|её|ее|их|ему|ей|им|него|неё|нее|них)$", re.IGNORECASE)
+
+
+def needs_new_opening(para):
+    """Первая фраза непонятна без заголовка: начинается с отсылки, с «А/Но/И…» или в первых шести
+    словах есть местоимение («А оказывается, что его листья…»)."""
+    first = re.split(r"(?<=[.!?])\s", para.strip(), 1)[0]
+    words = re.findall(r"[а-яёa-z]+", first.lower())[:6]
+    return bool(DANGLING.match(first) or re.search(r"\bименно так\w*", first, re.IGNORECASE)
+                or (words and words[0] in ("а", "и", "но", "да", "ведь", "же", "вот", "ну", "зато"))
+                or any(PRONOUN.match(w) for w in words))
+
+
 FIX_OPENING_PROMPT = """Перед тобой первый абзац поста. Его первая фраза непонятна без заголовка
 (начинается с местоимения или слова-отсылки). Перепиши ТОЛЬКО первую фразу так, чтобы она была понятна сама
 по себе и прямо называла, о чём речь. Остальное оставь без изменений. Ответь только исправленным абзацем, без кавычек.
@@ -285,13 +299,13 @@ def fix_opening(post, fn):
     post = {**post, "text": clean_text(post["text"], post["title"])}   # сначала убираем мусор сверху
     paras = post["text"].strip().split("\n\n", 1)
     first_sentence = re.split(r"(?<=[.!?])\s", paras[0], 1)[0]
-    if not (DANGLING.match(paras[0]) or re.search(r"\bименно так\w*", first_sentence, re.IGNORECASE)):
+    if not needs_new_opening(paras[0]):
         return post
     try:
         new = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
     except (requests.RequestException, ValueError, KeyError, IndexError):
         new = ""
-    if new and not DANGLING.match(new) and not re.search(r"\bименно так\w*", new.split(".")[0], re.I) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
+    if new and not needs_new_opening(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
         log("Первая фраза переписана: была отсылка к заголовку")
         paras[0] = new
     else:

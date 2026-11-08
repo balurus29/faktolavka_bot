@@ -101,6 +101,7 @@ def license_check(lic, author, site):
         return True, None
     if PHOTO_CREDITS and ATTRIB_LICENSE.search(lic_l) and not NON_COMMERCIAL.search(lic_l):
         author = re.sub(r"\s+", " ", author)
+        author = re.sub(r",?\s*\d{4}[-./]\d{2}[-./]\d{2}(?:[ T]\d{1,2}:\d{2}(?::\d{2})?)?", "", author)  # даты съёмки
         author = re.sub(r"^[\s/|,;:\-–—]+|[\s/|,;:\-–—]+$", "", author)   # мусорные разделители по краям
         if len(author) > 50:
             author = author[:50].rsplit(" ", 1)[0] + "…"
