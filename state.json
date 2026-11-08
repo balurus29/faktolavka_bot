@@ -109,7 +109,10 @@
   "wiki:Байтурсуновский арабский алфавит",
   "otd:1798:Джон Ферн добрался до кораллового острова Науру.",
   "rss:https://elementy.ru/novosti_nauki/434439/Gipoteza_o_proiskhozhdenii_zhizni_iz_goryachikh_istochnikov_postavlena_pod_somnenie",
-  "wiki:en:Palmyra"
+  "wiki:en:Palmyra",
+  "dyk:en:... that John C. Carson built the first sidewalk in Portland, Oregon?",
+  "dyk:en:... that the title of Lemnis Gate refers to the lemniscate?",
+  "apod:2026-09-19"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -213,10 +216,11 @@
   "commons:25365031",
   "commons:9236717",
   "commons:86704869",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Palmyra_03.jpg/1280px-Palmyra_03.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Palmyra_03.jpg/1280px-Palmyra_03.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "nasa:PIA26662"
  ],
- "posts": 75,
- "last_post": "2026-11-08T23:06+03:00",
+ "posts": 76,
+ "last_post": "2026-11-08T23:13+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -224,7 +228,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -232,6 +235,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
