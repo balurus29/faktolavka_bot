@@ -77,7 +77,7 @@ BLOCK_ANYWHERE = re.compile(
 BLOCK_IN_LEAD = re.compile(
     r"политик|политическ|партия|выборы|депутат|парламент|санкци|митинг|оппозиц|"
     r"politician|political party|election|parliament|sanction|"
-    r"религиоз|богослов|теолог|секта|ислам\b|христианств|иудаизм|буддизм|проповед|"
+    r"религиоз|богослов|теолог|секта|ислам\b|христианств|иудаизм|буддизм|проповед|инквизиц|"
     r"religious|theolog|\bsect\b|"
     r"войн[аыуе]|сражени|битв[аы]|вооружённ|теракт|убийств|расстрел|казн[иья]|геноцид|резн|"
     r"катастроф|самоубий|массов\w+ гибел|"
@@ -112,7 +112,8 @@ BORING_TITLE = re.compile(
 # Насилие в готовом тексте поста — такой пост не публикуем, берём другой материал.
 VIOLENT_TEXT = re.compile(
     r"казн[иеё]\w*|казнь|\bубил[аио]?\b|\bубит[аыо]?\b|убийств[оаеу]?\b|убийц|расстрел|резн[яиюе]|"
-    r"обезглав|повесил|пытк|растерзал|"
+    r"обезглав|повесил|пытк|растерзал|плетью|плетей|\bплеть|порк[аиу]|кнут[ао]?м|высекл|кандал|"
+    r"инквизиц|аутодафе|lashes|flogg|whipp|inquisition|auto-da-f|"
     r"executed|execution|murder|killed|massacre|beheaded|tortur",
     re.IGNORECASE)
 
@@ -320,6 +321,8 @@ def apod(state):
         sid = f"apod:{d.get('date')}"
         if sid in state["used_sources"] or len(d.get("explanation", "")) < 300:
             continue
+        if d.get("media_type") != "image" or d.get("copyright"):
+            continue                     # пост про снимок без самого снимка (он под авторским правом) не нужен
         free = d.get("media_type") == "image" and not d.get("copyright")   # снимки NASA — свободные
         yield {"id": sid, "kind": "космический снимок дня NASA с пояснением астрономов",
                "title": d.get("title", ""), "material": f"{d.get('title')}\n\n{d['explanation']}",

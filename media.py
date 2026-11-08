@@ -283,6 +283,8 @@ STOP = {"the", "and", "with", "for", "from", "of", "in", "on", "a", "an", "old",
 MORBID = re.compile(
     r"coffin|casket|corpse|cadaver|dead body|deceased|funeral|post.?mortem|deathbed|lying in state|"
     r"memento mori|execution|hanged|gallows|blood|wound|autopsy|"
+    r"prisoner|chained|in chains|shackle|fetter|flogging|whipping|inquisition|torture|"
+    r"узник|в цепях|кандал|инквизиц|пытк|"
     r"cemetery|graveyard|\bgraves?\b|gravestone|tombstone|\btombs?\b|burial|mausoleum|crypt|"
     r"кладбищ|могил|надгроб|склеп|"
     r"great depression|refugee|migrant|famine|starv|poverty|homeless|destitute|"
