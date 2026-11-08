@@ -81,6 +81,14 @@ POP_WORDS = re.compile(
     re.IGNORECASE)
 
 
+# Статьи энциклопедии, в которых почти не бывает удивительного факта.
+BORING_WIKI = re.compile(
+    r"\b(U\.?S\.? Route|Interstate|State Route|State Highway|Highway \d|Route \d|County Road|"
+    r"County|Township|Municipality|Borough|Parish|Census|Electoral|District)\b|^List of|"
+    r"шоссе|трасса|автомобильная дорога|автодорога|\bмаршрут|район\b|округ\b|муниципал|"
+    r"сельское поселение|городское поселение|^Список",
+    re.IGNORECASE)
+
 # Заметки, в которых обычно нет удивительного факта: рецепты, покупки, советы, обзоры.
 BORING_TITLE = re.compile(
     r"recipe|how to\b|\btips\b|gift guide|\bdeals?\b|\bsale\b|review|best .* to buy|podcast|newsletter|"
@@ -153,7 +161,7 @@ def wiki_good(state, lang):
     random.shuffle(titles)
     for title in titles[:12]:
         sid = f"wiki:{lang}:{title}" if lang != "ru" else f"wiki:{title}"
-        if sid in state["used_sources"]:
+        if sid in state["used_sources"] or BORING_WIKI.search(title):
             continue
         art = wiki_article(title, lang)
         if art and len(art["text"]) > 800:
@@ -180,7 +188,7 @@ def on_this_day(state):
             continue
         for page in ev.get("pages") or []:          # статья о самом событии, а не о годе или дате
             title = ((page.get("titles") or {}).get("normalized") or page.get("title", "")).replace("_", " ")
-            if GENERIC_TITLE.search(title):
+            if GENERIC_TITLE.search(title) or BORING_WIKI.search(title):
                 continue
             art = wiki_article(title)
             if art and len(art["text"]) >= 400:

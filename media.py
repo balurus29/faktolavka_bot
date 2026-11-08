@@ -277,10 +277,17 @@ RACY = re.compile(
     re.IGNORECASE)
 
 
+# Не фото: значки, флаги, гербы, логотипы, карты, схемы, графики.
+NOT_PHOTO = re.compile(
+    r"\.svg|shield|\bsign\b|logo|emblem|\bflag|coat of arms|\bseal of|\bmap\b|locator|diagram|"
+    r"chart|graph|route marker|\bicon\b|герб|флаг|логотип|эмблем|карта|схема|диаграмм|значок",
+    re.IGNORECASE)
+
+
 def is_morbid(item):
-    """Мрачная или откровенная картинка — не ставим ни при каких условиях."""
+    """Мрачная, откровенная картинка или не фото (значок, флаг, карта) — не ставим."""
     tags = item.get("tags") or ""
-    return bool(MORBID.search(tags) or RACY.search(tags))
+    return bool(MORBID.search(tags) or RACY.search(tags) or NOT_PHOTO.search(tags))
 
 
 # Стоковые фото людей-моделей — самая частая картинка «не в тему». Берём их, только если
