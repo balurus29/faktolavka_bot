@@ -114,7 +114,9 @@
   "dyk:en:... that the title of Lemnis Gate refers to the lemniscate?",
   "apod:2026-09-19",
   "dyk:en:... that the Spanish Inquisition sentenced Diego Mateo Zapata to wear the sanben",
-  "rss:https://www.sciencedaily.com/releases/2026/09/260903064229.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/09/260903064229.htm",
+  "wiki:Сазонова, Нина Афанасьевна",
+  "wiki:en:Venus"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -222,15 +224,15 @@
   "nasa:PIA26662",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Mateo_Zapata.jpg/1280px-Mateo_Zapata.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:26002",
-  "nasa:PIA12517"
+  "nasa:PIA12517",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/0/08/Venus_from_Mariner_10.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 78,
- "last_post": "2026-11-08T23:43+03:00",
+ "posts": 79,
+ "last_post": "2026-11-08T23:49+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -238,6 +240,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
