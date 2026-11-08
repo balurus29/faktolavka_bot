@@ -79,7 +79,8 @@
   "wiki:Илюшечкин, Василий Павлович",
   "wiki:Ижевско-Воткинское восстание",
   "wiki:Имяславие",
-  "wiki:Иволгинский оленный камень"
+  "wiki:Иволгинский оленный камень",
+  "rss:https://habr.com/ru/articles/1104974/?utm_campaign=1104974&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -160,12 +161,13 @@
   "commons:55548039",
   "commons:149492955",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg/1280px-Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Deer_stone_from_Ivolginsk.jpg/1280px-Deer_stone_from_Ivolginsk.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Deer_stone_from_Ivolginsk.jpg/1280px-Deer_stone_from_Ivolginsk.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "pixabay-photo:7783344",
+  "commons:41907258"
  ],
- "posts": 55,
- "last_post": "2026-11-08T19:06+03:00",
+ "posts": 56,
+ "last_post": "2026-11-08T19:09+03:00",
  "recent_topics": [
-  "general",
   "pop",
   "general",
   "general",
@@ -182,6 +184,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general"
