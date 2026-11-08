@@ -62,6 +62,8 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AI_IMAGE_FALLBACK: ${{ vars.AI_IMAGE_FALLBACK }}
           CHANNEL_SIGNATURE: ${{ vars.CHANNEL_SIGNATURE }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
