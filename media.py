@@ -90,6 +90,15 @@ ATTRIB_LICENSE = re.compile(r"\bcc[ -]by\b")                   # CC BY, CC BY-SA
 NON_COMMERCIAL = re.compile(r"\bn[cd]\b|[ -]n[cd]\b|noncommercial|noderiv")
 
 
+RU_LAT = dict(zip("абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+                  ["a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r",
+                   "s", "t", "u", "f", "kh", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya"]))
+
+
+def translit(s):
+    return "".join(RU_LAT.get(c, c) for c in s.lower())
+
+
 def strip_tags(s):
     return " ".join(re.sub(r"<[^>]+>", " ", s or "").split())
 
@@ -286,7 +295,7 @@ RACY = re.compile(
 # Не фото: значки, флаги, гербы, логотипы, карты, схемы, графики.
 NOT_PHOTO = re.compile(
     r"\.svg|shield|\bsign\b|logo|emblem|\bflag|coat of arms|\bseal of|\bmap\b|locator|diagram|"
-    r"chart|graph|route marker|\bicon\b|reaction|mechanism|pathway|formula|structural|"
+    r"\bcharts?\b|\bgraphs?\b|route marker|\bicon\b|reaction|mechanism|pathway|formula|structural|"
     r"герб|флаг|логотип|эмблем|карта|схема|диаграмм|значок",
     re.IGNORECASE)
 
@@ -371,9 +380,16 @@ def collect_photos(src, post, state, n):
     # Из поиска по названию статьи — не больше одной картинки, иначе альбом выходит однообразным
     # (три портрета одного человека). Остальное — по запросам нейросети о разных сторонах темы.
     if src.get("source") in ("wiki_ru", "wiki_en", "onthisday", "dyk_ru", "dyk_en") and not candidates:
-        # Wikimedia точно находит картинки по названию статьи — им сверка слов не нужна
+        # Поиск по названию статьи. Названия бывают многозначными («Вега» — звезда и городок в Техасе),
+        # поэтому картинка должна совпасть хотя бы с одним словом из запросов нейросети по теме.
+        # Слова самого названия (в латинице) не считаем: «Vega» совпадёт и с городком.
+        title_lat = {w[:4] for w in _words(translit(src["title"])) + _words(src["title"])}
+        topic_words = {w[:5] for q in queries for w in _words(q) if w[:4] not in title_lat}
         try:
-            for item in photos_wikimedia(src["title"])[:6]:
+            for item in photos_wikimedia(src["title"])[:8]:
+                tags = (item.get("tags") or "").lower()
+                if topic_words and not any(w in tags for w in topic_words):
+                    continue
                 if item["id"] not in state["used_media"] and not is_morbid(item):
                     candidates.append({**item, "trusted": True})
                     break
