@@ -226,7 +226,7 @@ def write_post(src):
                 interest = post.get("interest")
                 if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
                     return post                  # всё равно отбракуем — проверка фактов не нужна
-                return fact_check(post, src, name, fn)
+                return fix_opening(fact_check(post, src, name, fn), fn)
             except requests.HTTPError as e:
                 code = e.response.status_code if e.response is not None else 0
                 detail = (e.response.text[:200] if e.response is not None else "")
@@ -265,6 +265,37 @@ CHECK_PROMPT = """Ты строгий редактор-фактчекер. Св�
 МАТЕРИАЛ:
 {material}
 """
+
+
+# Первая фраза, которая без заголовка непонятна: «Она была создана…», «Именно так…», «Это…»
+DANGLING = re.compile(r"^\W*(она|он|оно|они|её|его|их|это|этот|эта|эти|этим|именно|так|такой|такая|"
+                      r"такое|такие|таким|там|тогда|здесь|поэтому)\b", re.IGNORECASE)
+
+FIX_OPENING_PROMPT = """Перед тобой первый абзац поста. Его первая фраза непонятна без заголовка
+(начинается с местоимения или слова-отсылки). Перепиши ТОЛЬКО первую фразу так, чтобы она была понятна сама
+по себе и прямо называла, о чём речь. Остальное оставь без изменений. Ответь только исправленным абзацем, без кавычек.
+
+Заголовок поста: {title}
+Абзац: {para}"""
+
+
+def fix_opening(post, fn):
+    """Если первая фраза отсылает к заголовку — просим переписать её, а при неудаче подставляем заголовок."""
+    paras = post["text"].strip().split("\n\n", 1)
+    if not DANGLING.match(paras[0]):
+        return post
+    try:
+        new = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        new = ""
+    if new and not DANGLING.match(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 2:
+        log("Первая фраза переписана: была отсылка к заголовку")
+        paras[0] = new
+    else:
+        title = re.sub(r"^[^\w«]+", "", post["title"]).rstrip(".!?")
+        log("Первая фраза отсылала к заголовку — добавил заголовок в начало")
+        paras[0] = f"{title}. {paras[0][0].upper()}{paras[0][1:]}"
+    return {**post, "text": "\n\n".join(paras)}
 
 
 def fact_check(post, src, name, fn):
