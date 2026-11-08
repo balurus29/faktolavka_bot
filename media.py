@@ -412,6 +412,9 @@ def collect_photos(src, post, state, n):
                     break
         except (requests.RequestException, ValueError, KeyError) as e:
             log(f"wikimedia: недоступен ({e.__class__.__name__})")
+    if len(candidates) < n:                      # остальные фото из самой статьи Википедии
+        known = {c["id"] for c in candidates}
+        candidates += [a for a in article_images(src, state, limit=n) if a["id"] not in known]
     if src.get("topic") == "pop":
         # Песни, фильмы, спорт: названия состоят из обычных слов («Kiss Me More» -> кепка «Kiss me I'm
         # Irish»), поиск по ним даёт случайные картинки. Берём только картинку из самой статьи.
@@ -419,6 +422,10 @@ def collect_photos(src, post, state, n):
     if queries and len(candidates) < n:
         candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"],
                               per_source=max(1, n - 1))
+    broad = [q for q in post.get("broad_queries", []) if q][:2]
+    if not candidates and broad and src.get("topic") != "pop":   # по точным запросам пусто — шире
+        log("Точных картинок нет — ищу по общей теме")
+        candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], broad, state["used_media"], per_source=1)
     if AI_FALLBACK and not candidates and queries:   # ничего подходящего — рисуем иллюстрацию
         candidates.append(photo_ai(post.get("image_prompt") or queries[-1]))
 
@@ -477,3 +484,104 @@ def collect_video(post, state):
         except (requests.RequestException, ValueError) as e:
             log(f"Пропускаю видео ({v['credit']}): {e}")
     return None
+
+
+# ---------------------------------------------------------------- запасные варианты
+def article_images(src, state, limit=4):
+    """Все фото из самой статьи Википедии (не только главное) — они точно по теме."""
+    lang = src.get("lang") or "ru"
+    if src.get("source") not in ("wiki_ru", "wiki_en", "onthisday", "dyk_ru", "dyk_en"):
+        return []
+    try:
+        data = _get(f"https://{lang}.wikipedia.org/w/api.php", params={
+            "action": "query", "format": "json", "formatversion": 2, "titles": src["title"],
+            "prop": "images", "imlimit": 40, "redirects": 1})
+        files = [i["title"] for p in data.get("query", {}).get("pages", []) for i in p.get("images", [])
+                 if re.search(r"\.jpe?g$", i["title"], re.IGNORECASE)]
+        if not files:
+            return []
+        random.shuffle(files)
+        info = _get(f"https://{lang}.wikipedia.org/w/api.php", params={
+            "action": "query", "format": "json", "formatversion": 2, "titles": "|".join(files[:20]),
+            "prop": "imageinfo", "iiprop": "url|extmetadata|size|mime", "iiurlwidth": 1280})
+    except (requests.RequestException, ValueError, KeyError) as e:
+        log(f"Картинки статьи недоступны ({e.__class__.__name__})")
+        return []
+    out = []
+    for page in info.get("query", {}).get("pages", []):
+        ii = (page.get("imageinfo") or [{}])[0]
+        meta = ii.get("extmetadata", {})
+        if ii.get("mime") != "image/jpeg" or (ii.get("width") or 0) < 600:
+            continue
+        ok, attrib = license_check(meta.get("LicenseShortName", {}).get("value", ""),
+                                   strip_tags(meta.get("Artist", {}).get("value", "")), "Wikimedia Commons")
+        desc = " ".join(strip_tags(meta.get(k, {}).get("value", ""))
+                        for k in ("ImageDescription", "ObjectName", "Categories"))
+        item = {"id": f"commons:{page.get('pageid') or page['title']}", "url": ii.get("thumburl") or ii["url"],
+                "credit": "Wikimedia Commons", "attrib": attrib, "trusted": True,
+                "tags": f"{page['title']} {desc}"[:2000].replace("_", " ")}
+        if ok and item["id"] not in state["used_media"] and not is_morbid(item):
+            out.append(item)
+        if len(out) >= limit:
+            break
+    return out
+
+
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+
+
+def brand_card(title):
+    """Фирменная обложка: заголовок поста на фоне «Фактолавки» с Фаней. Если ничего не нашлось."""
+    try:
+        from io import BytesIO
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return None
+    try:
+        black = os.path.join(ASSETS, "fonts", "InterDisplay-Black.otf")
+        semi = os.path.join(ASSETS, "fonts", "Inter-SemiBold.otf")
+        W, H = 1280, 720
+        TEAL, DOT, CREAM, HONEY, CORAL = (3, 70, 67), (9, 82, 78), (255, 239, 210), (255, 201, 60), (232, 85, 61)
+        im = Image.new("RGB", (W, H), TEAL)
+        d = ImageDraw.Draw(im)
+        for y in range(0, H, 48):
+            for x in range((y // 48) % 2 * 24, W, 48):
+                d.ellipse((x - 3, y - 3, x + 3, y + 3), fill=DOT)
+        for i, x in enumerate(range(0, W, 64)):                       # полосатый навес
+            c = CORAL if i % 2 == 0 else CREAM
+            d.rectangle((x, 0, x + 64, 26), fill=c)
+            d.ellipse((x, -6, x + 64, 58), fill=c)
+        av = Image.open(os.path.join(ASSETS, "fanya.png")).convert("RGBA").resize((400, 400), Image.LANCZOS)
+        mask = Image.new("L", (1600, 1600), 0)
+        ImageDraw.Draw(mask).ellipse((0, 0, 1600, 1600), fill=255)
+        mask = mask.resize((400, 400), Image.LANCZOS)
+        d.ellipse((62, 182, 478, 598), fill=CREAM)
+        im.paste(av, (70, 190), mask)
+        text = re.sub(r"^[^\w«]+", "", title).strip()
+        x0, maxw = 540, 680
+        for size in (76, 68, 60, 52, 46):                              # подбираем размер, чтобы влезло
+            font = ImageFont.truetype(black, size)
+            lines, cur = [], ""
+            for w in text.split():
+                t = (cur + " " + w).strip()
+                if d.textlength(t, font=font) <= maxw:
+                    cur = t
+                else:
+                    lines.append(cur)
+                    cur = w
+            lines.append(cur)
+            if len(lines) <= 5:
+                break
+        lines = lines[:5]
+        lh = int(size * 1.15)
+        y = 120 + (450 - lh * len(lines)) // 2
+        for ln in lines:
+            d.text((x0, y), ln, font=font, fill=CREAM)
+            y += lh
+        d.text((x0, 600), "ФАКТОЛАВКА", font=ImageFont.truetype(semi, 30), fill=HONEY)
+        buf = BytesIO()
+        im.save(buf, "JPEG", quality=90)
+        return buf.getvalue()
+    except Exception as e:                                            # обложка — не повод сорвать пост
+        log(f"Не удалось нарисовать обложку: {e}")
+        return None
