@@ -100,7 +100,11 @@ def license_check(lic, author, site):
     if FREE_LICENSE.search(lic_l):
         return True, None
     if PHOTO_CREDITS and ATTRIB_LICENSE.search(lic_l) and not NON_COMMERCIAL.search(lic_l):
-        author = author.strip()[:40] or "автор неизвестен"
+        author = re.sub(r"\s+", " ", author)
+        author = re.sub(r"^[\s/|,;:\-–—]+|[\s/|,;:\-–—]+$", "", author)   # мусорные разделители по краям
+        if len(author) > 50:
+            author = author[:50].rsplit(" ", 1)[0] + "…"
+        author = author or "автор неизвестен"
         name = re.sub(r"-(\d)", r" \1", lic.strip().upper().replace("CC-BY", "CC BY"))
         return True, f"{author}, {name}, {site}"
     return False, None
