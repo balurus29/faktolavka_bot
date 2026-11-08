@@ -88,13 +88,7 @@ def save_state(state):
 # ---------------------------------------------------------------- нейросеть
 PROMPT = """Ты автор популярного Telegram-канала с интересными фактами. Тон живой и лёгкий, с интригой, без канцелярита и без лживого кликбейта.
 
-Сначала оцени материал:
-- fact: одной фразой самый удивительный факт из материала, от которого обычный человек скажет «ого, не знал!».
-- interest: насколько он удивителен, от 1 до 10. Ставь 1-4, если материал — рецепт, кулинарная или бытовая история,
-  личный опыт, обзор товара, совет, реклама, анонс, сухая биография или новость без удивительного факта.
-  6 и выше — только если факт правда неожиданный (необычное явление, рекорд, странный обычай, открытие, парадокс).
-
-Затем напиши пост по материалу.
+Напиши пост по материалу ниже.
 Правила:
 - Используй ТОЛЬКО факты из материала. Не выдумывай цифры, даты, имена и подробности. Если не уверен в детали, просто не упоминай её.
 - Пиши своими словами, не копируй фразы из материала. Материал может быть на английском, пост всегда на русском.
@@ -103,16 +97,16 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - Сегодня {today}. Не считай сам, сколько лет прошло: не пиши «исполнилось N лет» или «N лет назад». Пиши «в этот день в 1929 году» или просто год.
 - Найди в материале самый неожиданный или удивительный факт и построй пост вокруг него. Строй пост вокруг жизни, открытий и достижений, а не вокруг смерти, могил, болезней или несчастий, даже если они есть в материале.
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
-- text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом «на подумать» или неожиданным выводом. НЕ призывай писать в комментариях, делиться мнением, ставить реакции или пересылать пост — у канала нет комментариев.
+- text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом к читателям или неожиданным выводом.
 - hashtags: 2-3 тега на русском, одним словом каждый. В text хэштеги НЕ пиши.
-- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-3 слова (одно слово — только если предмет уникален сам по себе, например "octopus"; иначе уточняй: "strawberry shortcake", а не "cake"): главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
+- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-2 слова: главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
 - image_prompt: описание иллюстрации к посту на английском, 1 предложение, без текста на картинке.
 - quiz: викторина по фактам из поста. question до 200 символов, options ровно 4 варианта до 90 символов каждый, correct — индекс правильного (0-3), explanation до 180 символов.
 
 Ответь строго одним JSON-объектом:
-{{"fact": "...", "interest": 0, "title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
+{{"title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
 
 Материал ({kind}, «{title}»):
 {material}
@@ -178,9 +172,6 @@ def ask_groq(prompt):
     return r.json()["choices"][0]["message"]["content"]
 
 
-MIN_INTEREST = int(os.getenv("MIN_INTEREST", "") or 6)   # ниже — материал пропускается
-
-
 def validate_post(p):
     if not isinstance(p.get("title"), str) or not isinstance(p.get("text"), str):
         raise ValueError("нет заголовка или текста")
@@ -216,9 +207,6 @@ def write_post(src):
             try:
                 post = validate_post(parse_json(fn(prompt)))
                 log(f"Текст написан: {name}")
-                interest = post.get("interest")
-                if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
-                    return post                  # всё равно отбракуем — проверка фактов не нужна
                 return fact_check(post, src, name, fn)
             except requests.HTTPError as e:
                 code = e.response.status_code if e.response is not None else 0
@@ -245,7 +233,7 @@ CHECK_PROMPT = """Ты строгий редактор-фактчекер. Св�
 
 Найди каждое утверждение в заголовке, тексте и викторине, которое НЕ подтверждается материалом,
 искажает его (перепутаны даты, причины и следствия, «всегда» вместо «с какого-то года», «первый» вместо «единственный»
-и т. п.) или преувеличивает. Подсчёты лет («исполнилось N лет», «N лет назад») удали — оставь только сам год. Исправь такие места по материалу или убери их. Стиль, длину, эмодзи и вопрос в конце сохрани. Призывы писать в комментариях, делиться мнением или ставить реакции удали.
+и т. п.) или преувеличивает. Подсчёты лет («исполнилось N лет», «N лет назад») удали — оставь только сам год. Исправь такие места по материалу или убери их. Стиль, длину, эмодзи и вопрос в конце сохрани.
 Если ошибок нет — верни пост без изменений.
 
 Ответь строго одним JSON-объектом:
@@ -305,20 +293,13 @@ def trim(text, limit):
     return cut.rsplit(" ", 1)[0].rstrip(",;:—-") + "…"
 
 
-def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
-    """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
+def build_caption(post, limit=CAPTION_LIMIT):
+    """Заголовок, текст, хэштеги и подпись канала. Источники и авторы медиа не указываются."""
     tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
     tags = " ".join(t for t in tags.split() if len(t) > 1)
-    attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
-    credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
-    footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
+    footer = "\n\n".join(x for x in [tags, SIGNATURE] if x)
     title = trim(post["title"].strip(), 100)
     text = re.sub(r"(?m)^[ \t]*(#\w+[ \t]*)+$", "", post["text"])    # нейросеть иногда сама ставит теги
-    # страховка: убираем предложения с призывами комментировать, даже если нейросеть их написала
-    text = re.sub(r"[^.!?\n]*(?:в комментари|комментируйте|делитесь|поделитесь|пишите,|напишите,|"
-                  r"ставьте|поставьте реакц|перешлите)[^.!?\n]*(?:[.!?]+|$)[ \t]*[^\s\w]*", "", text,
-                  flags=re.IGNORECASE | re.MULTILINE)
-    text = re.sub(r"[ \t]+\n", "\n", text)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
     body = trim(text, max(limit - len(title) - len(footer) - 6, 100))
     out = f"<b>{html.escape(title)}</b>\n\n{html.escape(body)}"
@@ -409,7 +390,7 @@ def main():
     state = load_state()
     kind = choose_type(args.type)
     tried = set()
-    for attempt in range(4):
+    for attempt in range(3):
         src = sources.pick_source(state, exclude=tried)
         log(f"Формат: {kind}. Источник: {src['source']}. Материал: {src['title']}")
         try:
@@ -420,21 +401,15 @@ def main():
         if post is None:
             tried.add(src["id"])
             continue
-        interest = post.get("interest")
-        if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
-            log(f"Скучный материал (интерес {interest}/10: {str(post.get('fact'))[:120]}) — беру другой")
-        elif not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
+        if not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
             break
-        else:
-            log("Готовый текст касается запрещённой темы — беру другой материал")
+        log("Готовый текст касается запрещённой темы — беру другой материал")
         tried.add(src["id"])
         state["used_sources"].append(src["id"])
     else:
         sys.exit("Не удалось подобрать подходящий материал")
-    if src.get("image_free"):                       # снимок NASA и т. п. — свободный
-        src["image_ok"], src["image_attrib"] = True, None
-    elif src.get("image"):
-        src["image_ok"], src["image_attrib"] = media.image_license(src)
+    if src.get("image") and not src.get("image_free"):
+        src["image_free"] = media.image_is_free(src)
 
     photos, video = [], None
     if kind in ("photo", "album", "mixed"):
@@ -444,8 +419,7 @@ def main():
         if not video and kind == "video":           # видео не нашлось — хотя бы фото
             photos = media.collect_photos(src, post, state, 1)
 
-    caption = build_caption(post, limit=4000 if not photos and not video else CAPTION_LIMIT,
-                            media_items=photos + [video])
+    caption = build_caption(post, limit=4000 if not photos and not video else CAPTION_LIMIT)
 
     if args.dry_run:
         print("\n" + "=" * 60 + f"\nФормат: {kind} | тема: {post['category']} | {src['topic']} | фото: {len(photos)} | видео: {bool(video)}")
