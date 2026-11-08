@@ -46,7 +46,8 @@
   "dyk:en:... that white box are used for railway sleepers and fences in Australia?",
   "otd:1932:Франклин Рузвельт избран 32-м президентом США.",
   "otd:1519:вступление Эрнана Кортеса в Теночтитлан.",
-  "dyk:en:... that the Ethiopian highland hare was originally described as a subspecies of"
+  "dyk:en:... that the Ethiopian highland hare was originally described as a subspecies of",
+  "wiki:Жёлтая подводная лодка (мультфильм)"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -101,10 +102,11 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/0/06/Retrato_de_Hern%C3%A1n_Cort%C3%A9s.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:63873",
   "commons:28454551",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Lepus_starcki_165504490.jpg/1280px-Lepus_starcki_165504490.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Lepus_starcki_165504490.jpg/1280px-Lepus_starcki_165504490.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "commons:8317418"
  ],
- "posts": 36,
- "last_post": "2026-11-08T16:00+03:00",
+ "posts": 37,
+ "last_post": "2026-11-08T16:02+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -125,6 +127,6 @@
   "general",
   "general",
   "general",
-  "general"
+  "pop"
  ]
 }
