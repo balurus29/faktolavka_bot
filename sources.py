@@ -109,6 +109,14 @@ BORING_TITLE = re.compile(
     re.IGNORECASE)
 
 
+# Насилие в готовом тексте поста — такой пост не публикуем, берём другой материал.
+VIOLENT_TEXT = re.compile(
+    r"казн[иеё]\w*|казнь|\bубил[аио]?\b|\bубит[аыо]?\b|убийств[оаеу]?\b|убийц|расстрел|резн[яиюе]|"
+    r"обезглав|повесил|пытк|растерзал|"
+    r"executed|execution|murder|killed|massacre|beheaded|tortur",
+    re.IGNORECASE)
+
+
 def is_blocked(text, lead_chars=500, any_chars=4000):
     return bool(BLOCK_ANYWHERE.search(text[:any_chars]) or BLOCK_IN_LEAD.search(text[:lead_chars]))
 

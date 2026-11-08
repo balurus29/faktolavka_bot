@@ -361,6 +361,11 @@ def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
     paras = [p for p in re.split(r"\n\s*\n", text.strip()) if p.strip()]
     if len(paras) >= 3 and paras[-1].rstrip().endswith("?") and paras[-2].rstrip().rstrip("🌊🤔😉🙂").rstrip().endswith("?"):
         paras.pop(-1)                                   # два вопроса подряд в конце — оставляем первый
+    if paras:                                           # два вопроса в одном последнем абзаце — оставляем последний
+        qs = re.findall(r"[^.!?]*\?", paras[-1])
+        if len(qs) >= 2 and paras[-1].rstrip().endswith("?"):
+            head = paras[-1][:paras[-1].find(qs[0].strip())].strip() if qs[0].strip() else ""
+            paras[-1] = (head + " " + qs[-1].strip()).strip()
     text = "\n\n".join(paras)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
     body = trim(text, min(max(limit - len(title) - len(footer) - 6, 100), 900))   # длиннее 900 — уже лонгрид
@@ -466,7 +471,8 @@ def main():
         interest = post.get("interest")
         if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
             log(f"Скучный материал (интерес {interest}/10: {str(post.get('fact'))[:120]}) — беру другой")
-        elif not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
+        elif not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0) \
+                and not sources.VIOLENT_TEXT.search(post["title"] + " " + post["text"]):
             break
         else:
             log("Готовый текст касается запрещённой темы — беру другой материал")
