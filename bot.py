@@ -88,7 +88,13 @@ def save_state(state):
 # ---------------------------------------------------------------- нейросеть
 PROMPT = """Ты автор популярного Telegram-канала с интересными фактами. Тон живой и лёгкий, с интригой, без канцелярита и без лживого кликбейта.
 
-Напиши пост по материалу ниже.
+Сначала оцени материал:
+- fact: одной фразой самый удивительный факт из материала, от которого обычный человек скажет «ого, не знал!».
+- interest: насколько он удивителен, от 1 до 10. Ставь 1-4, если материал — рецепт, кулинарная или бытовая история,
+  личный опыт, обзор товара, совет, реклама, анонс, сухая биография или новость без удивительного факта.
+  6 и выше — только если факт правда неожиданный (необычное явление, рекорд, странный обычай, открытие, парадокс).
+
+Затем напиши пост по материалу.
 Правила:
 - Используй ТОЛЬКО факты из материала. Не выдумывай цифры, даты, имена и подробности. Если не уверен в детали, просто не упоминай её.
 - Пиши своими словами, не копируй фразы из материала. Материал может быть на английском, пост всегда на русском.
@@ -99,14 +105,14 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
 - text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Закончи коротким вопросом «на подумать» или неожиданным выводом. НЕ призывай писать в комментариях, делиться мнением, ставить реакции или пересылать пост — у канала нет комментариев.
 - hashtags: 2-3 тега на русском, одним словом каждый. В text хэштеги НЕ пиши.
-- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-2 слова: главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
+- media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-3 слова (одно слово — только если предмет уникален сам по себе, например "octopus"; иначе уточняй: "strawberry shortcake", а не "cake"): главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
 - image_prompt: описание иллюстрации к посту на английском, 1 предложение, без текста на картинке.
 - quiz: викторина по фактам из поста. question до 200 символов, options ровно 4 варианта до 90 символов каждый, correct — индекс правильного (0-3), explanation до 180 символов.
 
 Ответь строго одним JSON-объектом:
-{{"title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
+{{"fact": "...", "interest": 0, "title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
 
 Материал ({kind}, «{title}»):
 {material}
@@ -172,6 +178,9 @@ def ask_groq(prompt):
     return r.json()["choices"][0]["message"]["content"]
 
 
+MIN_INTEREST = int(os.getenv("MIN_INTEREST", "") or 6)   # ниже — материал пропускается
+
+
 def validate_post(p):
     if not isinstance(p.get("title"), str) or not isinstance(p.get("text"), str):
         raise ValueError("нет заголовка или текста")
@@ -207,6 +216,9 @@ def write_post(src):
             try:
                 post = validate_post(parse_json(fn(prompt)))
                 log(f"Текст написан: {name}")
+                interest = post.get("interest")
+                if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
+                    return post                  # всё равно отбракуем — проверка фактов не нужна
                 return fact_check(post, src, name, fn)
             except requests.HTTPError as e:
                 code = e.response.status_code if e.response is not None else 0
@@ -397,7 +409,7 @@ def main():
     state = load_state()
     kind = choose_type(args.type)
     tried = set()
-    for attempt in range(3):
+    for attempt in range(4):
         src = sources.pick_source(state, exclude=tried)
         log(f"Формат: {kind}. Источник: {src['source']}. Материал: {src['title']}")
         try:
@@ -408,9 +420,13 @@ def main():
         if post is None:
             tried.add(src["id"])
             continue
-        if not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
+        interest = post.get("interest")
+        if isinstance(interest, (int, float)) and interest < MIN_INTEREST:
+            log(f"Скучный материал (интерес {interest}/10: {str(post.get('fact'))[:120]}) — беру другой")
+        elif not sources.is_blocked(post["title"] + " " + post["text"], lead_chars=0):
             break
-        log("Готовый текст касается запрещённой темы — беру другой материал")
+        else:
+            log("Готовый текст касается запрещённой темы — беру другой материал")
         tried.add(src["id"])
         state["used_sources"].append(src["id"])
     else:
