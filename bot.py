@@ -282,6 +282,7 @@ FIX_OPENING_PROMPT = """Перед тобой первый абзац поста
 
 def fix_opening(post, fn):
     """Если первая фраза отсылает к заголовку — просим переписать её, а при неудаче подставляем заголовок."""
+    post = {**post, "text": clean_text(post["text"], post["title"])}   # сначала убираем мусор сверху
     paras = post["text"].strip().split("\n\n", 1)
     if not DANGLING.match(paras[0]):
         return post
@@ -289,7 +290,7 @@ def fix_opening(post, fn):
         new = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
     except (requests.RequestException, ValueError, KeyError, IndexError):
         new = ""
-    if new and not DANGLING.match(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 2:
+    if new and not DANGLING.match(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
         log("Первая фраза переписана: была отсылка к заголовку")
         paras[0] = new
     else:
@@ -344,15 +345,9 @@ def trim(text, limit):
     return cut.rsplit(" ", 1)[0].rstrip(",;:—-") + "…"
 
 
-def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
-    """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
-    tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
-    tags = " ".join(t for t in tags.split() if len(t) > 1)
-    attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
-    credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
-    footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
-    title = trim(post["title"].strip(), 100)
-    text = re.sub(r"(?m)^[ \t]*(#\w+[ \t]*)+$", "", post["text"])    # нейросеть иногда сама ставит теги
+def clean_text(text, title=""):
+    """Чистит текст поста: хэштеги, повтор заголовка, призывы комментировать, лишние вопросы."""
+    text = re.sub(r"(?m)^[ \t]*(#\w+[ \t]*)+$", "", text)    # нейросеть иногда сама ставит теги
     # страховка: убираем предложения с призывами комментировать, даже если нейросеть их написала
     text = re.sub(r"[^.!?\n]*(?:в комментари|комментируйте|делитесь|поделитесь|пишите,|напишите,|"
                   r"ставьте|поставьте реакц|перешлите)[^.!?\n]*(?:[.!?]+|$)[ \t]*[^\s\w]*", "", text,
@@ -368,6 +363,22 @@ def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
             paras[-1] = (head + " " + qs[-1].strip()).strip()
     text = "\n\n".join(paras)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    paras = [p for p in text.split("\n\n") if p.strip()]
+    norm = lambda s: re.sub(r"[\W_]+", " ", s).strip().lower()
+    while paras and title and norm(paras[0]) == norm(title):     # нейросеть повторила заголовок
+        paras.pop(0)
+    return "\n\n".join(paras)
+
+
+def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
+    """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
+    tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
+    tags = " ".join(t for t in tags.split() if len(t) > 1)
+    attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
+    credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
+    footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
+    title = trim(post["title"].strip(), 100)
+    text = clean_text(post["text"], post["title"])
     body = trim(text, min(max(limit - len(title) - len(footer) - 6, 100), 900))   # длиннее 900 — уже лонгрид
     out = f"<b>{html.escape(title)}</b>\n\n{html.escape(body)}"
     return out + ("\n\n" + html.escape(footer) if footer else "")
