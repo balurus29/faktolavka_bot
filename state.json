@@ -48,7 +48,10 @@
   "otd:1519:вступление Эрнана Кортеса в Теночтитлан.",
   "dyk:en:... that the Ethiopian highland hare was originally described as a subspecies of",
   "wiki:Жёлтая подводная лодка (мультфильм)",
-  "rss:https://www.sciencedaily.com/releases/2026/08/260811011146.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/08/260811011146.htm",
+  "dyk:en:... that Charles Gauthier's statue of Sergent Blandan in Nancy contains Blandan ",
+  "dyk:en:... that the Meadowlark was the last Chicago and Eastern Illinois Railroad passe",
+  "otd:1961:первый выпуск программы «Клуб весёлых и находчивых»."
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -109,8 +112,8 @@
   "nasa:GSFC_20171208_Archive_e000698",
   "commons:148281152"
  ],
- "posts": 38,
- "last_post": "2026-11-08T16:14+03:00",
+ "posts": 39,
+ "last_post": "2026-11-08T16:28+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -129,8 +132,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general"
  ]
 }
