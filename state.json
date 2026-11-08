@@ -108,7 +108,8 @@
   "rss:https://www.techinsider.ru/news/news-1748973-fiziki-stalkivaya-yadra-kisloroda-vossozdali-veshchestvo-pervyh-mgnovenii-vselennoi/",
   "wiki:Байтурсуновский арабский алфавит",
   "otd:1798:Джон Ферн добрался до кораллового острова Науру.",
-  "rss:https://elementy.ru/novosti_nauki/434439/Gipoteza_o_proiskhozhdenii_zhizni_iz_goryachikh_istochnikov_postavlena_pod_somnenie"
+  "rss:https://elementy.ru/novosti_nauki/434439/Gipoteza_o_proiskhozhdenii_zhizni_iz_goryachikh_istochnikov_postavlena_pod_somnenie",
+  "wiki:en:Palmyra"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -211,10 +212,11 @@
   "commons:48425025",
   "commons:25365031",
   "commons:9236717",
-  "commons:86704869"
+  "commons:86704869",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Palmyra_03.jpg/1280px-Palmyra_03.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 74,
- "last_post": "2026-11-08T22:59+03:00",
+ "posts": 75,
+ "last_post": "2026-11-08T23:06+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -223,7 +225,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -231,6 +232,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
