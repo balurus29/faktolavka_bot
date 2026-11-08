@@ -23,6 +23,9 @@ import requests
 
 PEXELS_KEY = os.getenv("PEXELS_API_KEY", "")
 PIXABAY_KEY = os.getenv("PIXABAY_API_KEY", "")
+CF_ACCOUNT = os.getenv("CLOUDFLARE_ACCOUNT_ID", "")
+CF_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN", "")
+CF_MODEL = os.getenv("CLOUDFLARE_IMAGE_MODEL", "") or "@cf/black-forest-labs/flux-1-schnell"
 AI_FALLBACK = os.getenv("AI_IMAGE_FALLBACK", "0") == "1"   # ИИ-картинки: выключены, включить = "1"
 
 MAX_PHOTO_BYTES = 9_500_000
@@ -422,6 +425,11 @@ def collect_photos(src, post, state, n):
     if queries and len(candidates) < n:
         candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"],
                               per_source=max(1, n - 1))
+    if not candidates and CF_ACCOUNT and CF_TOKEN and src.get("topic") != "pop":
+        # Настоящих фото по теме нет — рисуем иллюстрацию нейросетью Cloudflare
+        gen = generate_cf(post.get("image_prompt") or (queries[0] if queries else ""))
+        if gen:
+            candidates.append(gen)
     broad = [q for q in post.get("broad_queries", []) if q][:2]
     if not candidates and broad and src.get("topic") != "pop":   # по точным запросам пусто — шире
         log("Точных картинок нет — ищу по общей теме")
@@ -436,7 +444,7 @@ def collect_photos(src, post, state, n):
         if category != "space" and NOT_EARTH.search(c.get("tags") or ""):
             continue                             # снимки других планет к земной теме («полярный вихрь» Титана)
         try:
-            data = download(c["url"], MAX_PHOTO_BYTES)
+            data = c.get("data") or download(c["url"], MAX_PHOTO_BYTES)
         except (requests.RequestException, ValueError) as e:
             log(f"Пропускаю картинку ({c['credit']}): {e}")
             continue
@@ -585,3 +593,39 @@ def brand_card(title):
     except Exception as e:                                            # обложка — не повод сорвать пост
         log(f"Не удалось нарисовать обложку: {e}")
         return None
+
+
+# ---------------------------------------------------------------- генерация Cloudflare
+CF_STYLE = (", detailed editorial illustration, rich colors, painterly digital art, "
+            "no text, no letters, no words, no watermark, no logo")
+
+
+def generate_cf(prompt):
+    """Иллюстрация от нейросети Cloudflare Workers AI (бесплатно — 10 000 «нейронов» в день,
+    одна картинка flux-1-schnell тратит несколько десятков)."""
+    prompt = (prompt or "").strip()
+    if not prompt or MORBID.search(prompt) or RACY.search(prompt):
+        return None
+    try:
+        r = session.post(f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT}/ai/run/{CF_MODEL}",
+                         headers={"Authorization": f"Bearer {CF_TOKEN}"},
+                         json={"prompt": (prompt + CF_STYLE)[:2000], "steps": 6}, timeout=120)
+        r.raise_for_status()
+        if r.headers.get("Content-Type", "").startswith("image/"):
+            data = r.content                                   # некоторые модели отдают картинку сразу
+        else:
+            body = r.json()
+            b64 = (body.get("result") or {}).get("image") or body.get("image")
+            if not b64:
+                raise ValueError(f"нет картинки в ответе: {str(body)[:200]}")
+            import base64
+            data = base64.b64decode(b64)
+    except (requests.RequestException, ValueError) as e:
+        detail = ""
+        if isinstance(e, requests.HTTPError) and e.response is not None:
+            detail = e.response.text[:200]
+        log(f"Cloudflare: картинку нарисовать не удалось ({e.__class__.__name__}) {detail}")
+        return None
+    log("Нарисовал иллюстрацию нейросетью Cloudflare")
+    return {"id": f"ai-cf:{abs(hash(prompt))}", "url": "", "data": data, "credit": "Cloudflare AI",
+            "attrib": "🎨 Иллюстрация создана нейросетью", "trusted": True, "tags": prompt}

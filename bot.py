@@ -123,7 +123,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - broad_queries: 2 более общих запроса НА АНГЛИЙСКОМ по теме поста, которую легко сфотографировать, на случай если по точным ничего не найдётся (например для римского легионера — "roman helmet", "ancient rome"; для шахматной программы — "chess board", "old computer"). Без войны, оружия и солдат.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
-- image_prompt: описание иллюстрации к посту на английском, 1 предложение, без текста на картинке.
+- image_prompt: описание иллюстрации к посту НА АНГЛИЙСКОМ, 1-2 предложения: конкретная сцена или предмет из поста, обстановка, эпоха, освещение (например "A Roman legionary courier in a red tunic walking along a stone road near an ancient Italian town at sunset"). Без текста на картинке, без портретов конкретных реальных людей (показывай сцену, предмет или безымянного персонажа), без насилия.
 - quiz: викторина ТОЛЬКО по тому, что прямо написано в text (не по остальному материалу) — читатель должен найти ответ в посте; правильный ответ должен дословно встречаться в text. Формулируй вопрос словами из text: не используй в вопросе и вариантах термины и названия, которых нет в тексте поста. question до 200 символов, options ровно 4 варианта до 90 символов каждый, correct — индекс правильного (0-3), explanation до 180 символов.
 
 Ответь строго одним JSON-объектом:
@@ -441,7 +441,7 @@ def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
         tags = {"space": "#космос", "history": "#история", "nature": "#природа", "science": "#наука",
                 "art": "#искусство"}.get(post.get("category"), "#факты")
     attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
-    credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
+    credit = "\n".join(a if a.startswith("🎨") else "📷 " + a for a in attribs[:3])
     footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)
     title = trim(post["title"].strip(), 100)
     text = clean_text(post["text"], post["title"])
