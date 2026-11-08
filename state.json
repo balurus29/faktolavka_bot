@@ -51,7 +51,9 @@
   "rss:https://www.sciencedaily.com/releases/2026/08/260811011146.htm",
   "dyk:en:... that Charles Gauthier's statue of Sergent Blandan in Nancy contains Blandan ",
   "dyk:en:... that the Meadowlark was the last Chicago and Eastern Illinois Railroad passe",
-  "otd:1961:первый выпуск программы «Клуб весёлых и находчивых»."
+  "otd:1961:первый выпуск программы «Клуб весёлых и находчивых».",
+  "dyk:en:... that Walker Keith Baylor, a strong believer in phrenology and physiognomy, d",
+  "dyk:en:... that Bob Moore did not found Bob's Red Mill until after his first retirement"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -110,10 +112,13 @@
   "commons:8317418",
   "nasa:PIA22085",
   "nasa:GSFC_20171208_Archive_e000698",
-  "commons:148281152"
+  "commons:148281152",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Bob_Moore_2012_%28cropped%29.jpg/1280px-Bob_Moore_2012_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "pixabay-photo:7974363",
+  "pixabay-photo:3412256"
  ],
- "posts": 39,
- "last_post": "2026-11-08T16:28+03:00",
+ "posts": 40,
+ "last_post": "2026-11-08T16:32+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -131,8 +136,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general"
  ]
