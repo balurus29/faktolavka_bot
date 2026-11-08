@@ -284,13 +284,14 @@ def fix_opening(post, fn):
     """Если первая фраза отсылает к заголовку — просим переписать её, а при неудаче подставляем заголовок."""
     post = {**post, "text": clean_text(post["text"], post["title"])}   # сначала убираем мусор сверху
     paras = post["text"].strip().split("\n\n", 1)
-    if not DANGLING.match(paras[0]):
+    first_sentence = re.split(r"(?<=[.!?])\s", paras[0], 1)[0]
+    if not (DANGLING.match(paras[0]) or re.search(r"\bименно так\w*", first_sentence, re.IGNORECASE)):
         return post
     try:
         new = fn(FIX_OPENING_PROMPT.format(title=post["title"], para=paras[0])).strip().strip('"«»')
     except (requests.RequestException, ValueError, KeyError, IndexError):
         new = ""
-    if new and not DANGLING.match(new) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
+    if new and not DANGLING.match(new) and not re.search(r"\bименно так\w*", new.split(".")[0], re.I) and 0.5 < len(new) / max(len(paras[0]), 1) < 4 and len(new) < 600:
         log("Первая фраза переписана: была отсылка к заголовку")
         paras[0] = new
     else:
@@ -373,7 +374,7 @@ def clean_text(text, title=""):
 def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
     """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
     tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
-    tags = " ".join(t for t in tags.split() if len(t) > 1)
+    tags = " ".join(t for t in tags.split() if len(t) > 1 and re.search(r"[а-яё]", t, re.IGNORECASE))
     attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
     credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
     footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)

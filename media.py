@@ -335,6 +335,10 @@ def _search(sources, order, queries, used, per_source=2):
             continue
         taken = 0
         for q in queries:
+            # В архивах описания файлов длинные и разношёрстные: одно совпавшее слово почти ничего
+            # не значит (по «rooftop» находится спасательный вертолёт). Там ищем только по 2+ словам.
+            if name in ("wikimedia", "openverse") and len(_words(q)) < 2:
+                continue
             try:
                 items = fn(q)
             except (requests.RequestException, ValueError, KeyError) as e:
