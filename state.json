@@ -58,7 +58,9 @@
   "wiki:Чандарлы Халил-паша",
   "dyk:en:... that at the end of The Beatles' rooftop concert, John Lennon jokingly said, ",
   "wiki:Batman: Arkham Knight",
-  "rss:https://habr.com/ru/articles/1104878/?utm_campaign=1104878&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/articles/1104878/?utm_campaign=1104878&utm_source=habrahabr&utm_medium=rss",
+  "wiki:Фальшивые зеркала",
+  "rss:https://www.sciencedaily.com/releases/2026/04/260402042731.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -125,10 +127,12 @@
   "commons:31219357",
   "nasa:AFRC2020-0025-10",
   "nasa:GSFC_20171208_Archive_e000407",
-  "commons:46895815"
+  "commons:46895815",
+  "commons:55217676",
+  "openverse:2515a8ec-7a9c-4161-918d-03fcddd82971"
  ],
- "posts": 43,
- "last_post": "2026-11-08T16:49+03:00",
+ "posts": 44,
+ "last_post": "2026-11-08T17:03+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -142,8 +146,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
