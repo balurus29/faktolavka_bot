@@ -102,6 +102,13 @@ def translit(s):
     return "".join(RU_LAT.get(c, c) for c in s.lower())
 
 
+def file_desc(meta):
+    """Что на картинке: название объекта, категории и только начало описания. Длинные описания
+    (у некоторых авторов — по несколько абзацев) содержат почти любые слова и дают ложные совпадения."""
+    get = lambda k: strip_tags(meta.get(k, {}).get("value", ""))
+    return f"{get('ObjectName')} {get('Categories')} {get('ImageDescription')[:200]}"
+
+
 def strip_tags(s):
     return " ".join(re.sub(r"<[^>]+>", " ", s or "").split())
 
@@ -142,8 +149,7 @@ def photos_wikimedia(q):
                                    "Wikimedia Commons")
         if not ok:
             continue
-        desc = " ".join(re.sub(r"<[^>]+>", " ", meta.get(k, {}).get("value", ""))
-                        for k in ("ImageDescription", "ObjectName", "Categories"))
+        desc = file_desc(meta)
         out.append({"id": f"commons:{page['pageid']}", "url": info.get("thumburl") or info["url"],
                     "credit": "Wikimedia Commons", "attrib": attrib,
                     "tags": f"{page.get('title', '')} {desc}"[:2000].replace("_", " ")})
@@ -523,8 +529,7 @@ def article_images(src, state, limit=4):
             continue
         ok, attrib = license_check(meta.get("LicenseShortName", {}).get("value", ""),
                                    strip_tags(meta.get("Artist", {}).get("value", "")), "Wikimedia Commons")
-        desc = " ".join(strip_tags(meta.get(k, {}).get("value", ""))
-                        for k in ("ImageDescription", "ObjectName", "Categories"))
+        desc = file_desc(meta)
         item = {"id": f"commons:{page.get('pageid') or page['title']}", "url": ii.get("thumburl") or ii["url"],
                 "credit": "Wikimedia Commons", "attrib": attrib, "trusted": True,
                 "tags": f"{page['title']} {desc}"[:2000].replace("_", " ")}
