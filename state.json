@@ -91,7 +91,9 @@
   "rss:https://habr.com/ru/articles/1099612/?utm_campaign=1099612&utm_source=habrahabr&utm_medium=rss",
   "rss:https://www.sciencedaily.com/releases/2026/08/260807035145.htm",
   "rss:https://habr.com/ru/articles/1103342/?utm_campaign=1103342&utm_source=habrahabr&utm_medium=rss",
-  "dyk:en:... that after discontinuing normal programming, KPPC radio signed on once a wee"
+  "dyk:en:... that after discontinuing normal programming, KPPC radio signed on once a wee",
+  "rss:https://www.smithsonianmag.com/smart-news/melting-ice-in-the-italian-dolomites-exposes-hundreds-of-world-war-i-munitions-vestiges-of-the-vertiginous-winter-war-180989787/",
+  "rss:https://www.smithsonianmag.com/smart-news/researchers-claimed-a-blurry-object-on-apple-maps-was-very-likely-amelia-earharts-missing-plane-it-turned-out-to-be-a-collection-of-large-trees-180989734/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -185,10 +187,11 @@
   "nasa:201306180007HQ",
   "commons:24765015",
   "openverse:ace815c9-178a-44f2-9055-30b36509efe8",
-  "commons:74330132"
+  "commons:74330132",
+  "pixabay-photo:10394495"
  ],
- "posts": 64,
- "last_post": "2026-11-08T20:48+03:00",
+ "posts": 65,
+ "last_post": "2026-11-08T20:50+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -196,7 +199,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -209,6 +211,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general"
  ]
 }
