@@ -66,7 +66,8 @@
   "rss:https://habr.com/ru/companies/selectel/articles/1096308/?utm_campaign=1096308&utm_source=habrahabr&utm_medium=rss",
   "rss:https://habr.com/ru/companies/onlinepatent/articles/1101792/?utm_campaign=1101792&utm_source=habrahabr&utm_medium=rss",
   "rss:https://habr.com/ru/companies/beget/articles/1088418/?utm_campaign=1088418&utm_source=habrahabr&utm_medium=rss",
-  "wiki:en:Vega"
+  "wiki:en:Vega",
+  "rss:https://habr.com/ru/articles/1101410/?utm_campaign=1101410&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -139,10 +140,13 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Albert_Einstein_Head_cleaned.jpg/1280px-Albert_Einstein_Head_cleaned.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "pixabay-photo:3523491",
   "commons:79275382",
-  "commons:11230335"
+  "commons:11230335",
+  "nasa:PIA15818",
+  "nasa:PIA13781",
+  "commons:157890662"
  ],
- "posts": 48,
- "last_post": "2026-11-08T17:54+03:00",
+ "posts": 49,
+ "last_post": "2026-11-08T18:02+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -151,8 +155,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
