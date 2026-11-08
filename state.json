@@ -89,7 +89,8 @@
   "otd:1793:Лувр прекратил быть королевским дворцом и стал публичным муз",
   "dyk:en:... that North American Piedmontese cattle are a breed of beef cattle originatin",
   "rss:https://habr.com/ru/articles/1099612/?utm_campaign=1099612&utm_source=habrahabr&utm_medium=rss",
-  "rss:https://www.sciencedaily.com/releases/2026/08/260807035145.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/08/260807035145.htm",
+  "rss:https://habr.com/ru/articles/1103342/?utm_campaign=1103342&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -184,10 +185,9 @@
   "commons:24765015",
   "openverse:ace815c9-178a-44f2-9055-30b36509efe8"
  ],
- "posts": 62,
- "last_post": "2026-11-08T20:10+03:00",
+ "posts": 63,
+ "last_post": "2026-11-08T20:30+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -206,6 +206,7 @@
   "general",
   "general",
   "general",
-  "general"
+  "general",
+  "pop"
  ]
 }
