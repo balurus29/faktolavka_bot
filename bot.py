@@ -407,6 +407,9 @@ def build_caption(post, limit=CAPTION_LIMIT, media_items=()):
     """Заголовок, текст, хэштеги, подпись авторов фото (если лицензия требует) и подпись канала."""
     tags = " ".join("#" + re.sub(r"[^\w]", "", t.lstrip("#")) for t in post["hashtags"])
     tags = " ".join(t for t in tags.split() if len(t) > 1 and re.search(r"[а-яё]", t, re.IGNORECASE))
+    if not tags:                                        # нейросеть дала теги не по-русски — ставим тег темы
+        tags = {"space": "#космос", "history": "#история", "nature": "#природа", "science": "#наука",
+                "art": "#искусство"}.get(post.get("category"), "#факты")
     attribs = list(dict.fromkeys(m["attrib"] for m in media_items if m and m.get("attrib")))
     credit = ("📷 " + "; ".join(attribs[:3])) if attribs else ""
     footer = "\n\n".join(x for x in [tags, credit, SIGNATURE] if x)

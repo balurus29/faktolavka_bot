@@ -325,7 +325,8 @@ def relevant(item, query):
     words = _words(query)
     if not words or PEOPLE.search(item.get("tags") or "") and not PEOPLE.search(query):
         return False
-    return score(item, query) == len(words)
+    need = len(words) if len(words) <= 2 else -(-len(words) * 2 // 3)   # 3+ слова — хватит 2/3
+    return score(item, query) >= need
 
 
 def score(item, query):
@@ -395,6 +396,10 @@ def collect_photos(src, post, state, n):
                     break
         except (requests.RequestException, ValueError, KeyError) as e:
             log(f"wikimedia: недоступен ({e.__class__.__name__})")
+    if src.get("topic") == "pop":
+        # Песни, фильмы, спорт: названия состоят из обычных слов («Kiss Me More» -> кепка «Kiss me I'm
+        # Irish»), поиск по ним даёт случайные картинки. Берём только картинку из самой статьи.
+        queries = []
     if queries and len(candidates) < n:
         candidates += _search(PHOTO_SOURCES, PHOTO_ORDER[category], queries, state["used_media"],
                               per_source=max(1, n - 1))
