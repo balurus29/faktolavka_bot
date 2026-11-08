@@ -63,7 +63,10 @@
   "rss:https://www.sciencedaily.com/releases/2026/04/260402042731.htm",
   "dyk:en:... that the leaves of two species of the fossil plant genus Banksieaeformis res",
   "wiki:Эйнштейн, Альберт",
-  "rss:https://habr.com/ru/companies/selectel/articles/1096308/?utm_campaign=1096308&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/companies/selectel/articles/1096308/?utm_campaign=1096308&utm_source=habrahabr&utm_medium=rss",
+  "rss:https://habr.com/ru/companies/onlinepatent/articles/1101792/?utm_campaign=1101792&utm_source=habrahabr&utm_medium=rss",
+  "rss:https://habr.com/ru/companies/beget/articles/1088418/?utm_campaign=1088418&utm_source=habrahabr&utm_medium=rss",
+  "wiki:en:Vega"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -135,10 +138,11 @@
   "openverse:2515a8ec-7a9c-4161-918d-03fcddd82971",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Albert_Einstein_Head_cleaned.jpg/1280px-Albert_Einstein_Head_cleaned.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "pixabay-photo:3523491",
-  "commons:79275382"
+  "commons:79275382",
+  "commons:11230335"
  ],
- "posts": 47,
- "last_post": "2026-11-08T17:48+03:00",
+ "posts": 48,
+ "last_post": "2026-11-08T17:54+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -148,8 +152,8 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
