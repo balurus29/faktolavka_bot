@@ -75,7 +75,11 @@
   "dyk:en:... that \"Kiss Me More\" interpolates the melody from \"Physical\" by Olivia Newton",
   "wiki:Белая акула",
   "otd:1923:«Пивной путч» в Мюнхене.",
-  "wiki:Чернопёрая акула"
+  "wiki:Чернопёрая акула",
+  "wiki:Илюшечкин, Василий Павлович",
+  "wiki:Ижевско-Воткинское восстание",
+  "wiki:Имяславие",
+  "wiki:Иволгинский оленный камень"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -155,13 +159,13 @@
   "pixabay-photo:11646",
   "commons:55548039",
   "commons:149492955",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg/1280px-Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg/1280px-Carcharhinus_limbatus_-_Caraibische_zwartpunthaai.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Deer_stone_from_Ivolginsk.jpg/1280px-Deer_stone_from_Ivolginsk.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 54,
- "last_post": "2026-11-08T19:01+03:00",
+ "posts": 55,
+ "last_post": "2026-11-08T19:06+03:00",
  "recent_topics": [
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -178,6 +182,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general"
  ]
