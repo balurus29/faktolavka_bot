@@ -2,6 +2,8 @@
 Откуда бот берёт материал для постов и какие темы пропускает.
 
 Источники (доли меняются в SOURCE_WEIGHTS):
+  dyk_ru       рубрика «Знаете ли вы?» русской Википедии — тысячи проверенных удивительных фактов
+  dyk_en       рубрика «Did you know…?» английской Википедии — десятки тысяч фактов (бот переводит)
   wiki_ru      избранные и хорошие статьи русской Википедии
   onthisday    «В этот день» из русской Википедии
   wiki_en      избранные и хорошие статьи английской Википедии (бот переводит)
@@ -27,8 +29,8 @@ import requests
 MSK = timezone(timedelta(hours=3))
 NASA_KEY = os.getenv("NASA_API_KEY", "") or "DEMO_KEY"
 
-SOURCE_WEIGHTS = {"wiki_ru": 25, "onthisday": 15, "wiki_en": 10,
-                  "rss_ru": 20, "rss_en": 20, "apod": 10}
+SOURCE_WEIGHTS = {"dyk_ru": 25, "dyk_en": 20, "wiki_ru": 12, "onthisday": 8, "wiki_en": 5,
+                  "rss_ru": 13, "rss_en": 10, "apod": 7}
 
 RSS_FEEDS = {
     "rss_ru": [
@@ -303,8 +305,105 @@ def apod(state):
                "image": d.get("url") if free else None, "image_free": free, "category": "space"}
 
 
+# ---------------------------------------------------------------- «Знаете ли вы?»
+# Каждый факт рубрики — строка вида «* … что '''[[Статья]]''' ...?». Жирная ссылка — статья,
+# из которой взят факт. Бот берёт сам факт и начало этой статьи для подробностей.
+EN_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+             "September", "October", "November", "December"]
+HOOK_LINE = re.compile(r"^[*#:]*\s*(?:\.\.\.|…)\s*(?:что|that)\b", re.IGNORECASE)
+BOLD_LINK = re.compile(r"'''\s*\[\[([^\]|#]+)")
+ANY_LINK = re.compile(r"\[\[([^\]|#]+)")
+
+
+def wikitext(lang, title):
+    data = wiki_api(lang, {"action": "query", "titles": title, "prop": "revisions",
+                           "rvprop": "content", "rvslots": "main", "redirects": 1})
+    page = (data.get("query", {}).get("pages") or [{}])[0]
+    if page.get("missing") or "revisions" not in page:
+        return ""
+    return page["revisions"][0]["slots"]["main"]["content"]
+
+
+def clean_wiki(s):
+    s = re.sub(r"<ref[^>]*?/>|<ref.*?</ref>", "", s, flags=re.DOTALL)
+    for _ in range(3):
+        s = re.sub(r"\{\{[^{}]*\}\}", "", s)                      # шаблоны
+    s = re.sub(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]", r"\1", s)       # [[a|b]] -> b
+    s = re.sub(r"\[https?://\S+\s*([^\]]*)\]", r"\1", s)
+    s = re.sub(r"'{2,}|<[^>]+>", "", s)
+    s = re.sub(r"\((?:на илл\.|на фото|изображ[её]н\w*|pictured|illustrated)\)", "", s, flags=re.I)
+    return " ".join(s.split()).lstrip("*#: ").strip()
+
+
+def parse_hooks(text):
+    hooks = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not HOOK_LINE.match(line):
+            continue
+        link = BOLD_LINK.search(line) or ANY_LINK.search(line)
+        if not link or link.group(1).startswith(("Файл:", "File:", "Image:", "Изображение:")):
+            continue
+        hook = clean_wiki(line)
+        if 40 <= len(hook) <= 400:
+            hooks.append({"hook": hook, "article": link.group(1).strip()})
+    return hooks
+
+
+_ru_archive_pages = []
+
+
+def dyk_pages_ru():
+    """Находит страницы архива рубрики через API (названия меняются — не зашиваем их в код)."""
+    if _ru_archive_pages:
+        return _ru_archive_pages
+    for ns in (4, 104, 10):                       # Википедия:, Проект:, Шаблон:
+        for prefix in ("Знаете ли вы/Архив рубрики/", "Знаете ли вы/Архив/", "Знаете ли вы/"):
+            data = wiki_api("ru", {"action": "query", "list": "allpages", "apnamespace": ns,
+                                   "apprefix": prefix, "aplimit": 500})
+            titles = [p["title"] for p in data.get("query", {}).get("allpages", [])
+                      if re.search(r"\d{4}", p["title"]) and "Обсуждение" not in p["title"]]
+            if len(titles) > 5:
+                _ru_archive_pages.extend(titles)
+                return _ru_archive_pages
+    log("Архив «Знаете ли вы?» не найден")
+    return _ru_archive_pages
+
+
+def dyk(state, lang):
+    if lang == "ru":
+        pages = dyk_pages_ru()[:]
+        random.shuffle(pages)
+        pages = pages[:3]
+    else:
+        now = datetime.now(MSK)
+        pages = [f"Wikipedia:Recent additions/{random.randint(2012, now.year - 1)}/{random.choice(EN_MONTHS)}"
+                 for _ in range(3)]
+    for page in pages:
+        try:
+            hooks = parse_hooks(wikitext(lang, page))
+        except (requests.RequestException, KeyError, IndexError) as e:
+            log(f"Архив {page} недоступен: {e.__class__.__name__}")
+            continue
+        random.shuffle(hooks)
+        for h in hooks[:15]:
+            sid = f"dyk:{lang}:{h['hook'][:80]}"
+            if (sid in state["used_sources"] or is_blocked(h["hook"], lead_chars=len(h["hook"]))
+                    or BORING_WIKI.search(h["article"])):
+                continue
+            art = wiki_article(h["article"], lang)
+            if not art or len(art["text"]) < 300:
+                continue
+            fact = ("Знаете ли вы, " if lang == "ru" else "Did you know ") + h["hook"].lstrip(".… ")
+            yield {"id": sid, "kind": "проверенный удивительный факт из рубрики «Знаете ли вы?» Википедии",
+                   "material": f"ГЛАВНЫЙ ФАКТ: {fact}\n\nПодробности из статьи «{art['title']}»:\n{art['text']}",
+                   **art}
+
+
 # ---------------------------------------------------------------- выбор
 GENERATORS = {
+    "dyk_ru": lambda st: dyk(st, "ru"),
+    "dyk_en": lambda st: dyk(st, "en"),
     "wiki_ru": lambda st: wiki_good(st, "ru"),
     "onthisday": on_this_day,
     "wiki_en": lambda st: wiki_good(st, "en"),
