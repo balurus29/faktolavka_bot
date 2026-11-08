@@ -117,6 +117,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - title: цепляющий заголовок до 70 символов, можно с одним эмодзи в начале.
 - text: 2-4 коротких абзаца, всего 350-650 символов, абзацы разделяй пустой строкой. 1-3 эмодзи на весь текст. Первая фраза текста должна быть понятна без заголовка: НЕ начинай с «Именно так», «Именно такую», «Это», «Так» и других слов, которые отсылают к заголовку. Закончи ОДНИМ коротким вопросом «на подумать» или неожиданным выводом — не двумя. Вывод должен прямо следовать из факта, не притягивай мораль. НЕ призывай писать в комментариях, делиться мнением, ставить реакции или пересылать пост — у канала нет комментариев.
 - hashtags: 2-3 тега на русском, одним словом каждый. В text хэштеги НЕ пиши.
+- subject: главный герой поста НА АНГЛИЙСКОМ, как он называется в английской Википедии: человек, место, объект, животное (например "Amelia Earhart", "Louvre", "Piedmontese cattle", "Vega"). Если главного героя нет — пустая строка.
 - media_queries: 3 запроса НА АНГЛИЙСКОМ для фотостока, по 1-3 слова (одно слово — только если предмет уникален сам по себе, например "octopus"; иначе уточняй: "strawberry shortcake", а не "cake"): главный предмет поста, который буквально видно на фото (существительное). Первый запрос — самый точный и короткий. Примеры: "octopus", "opera house", "subway station", "comet", "tennis grass". Никаких абстракций вроде "history", "science", "atmosphere", "mystery". Без имён людей.
 - video_query: 1-2 английских слова, ТОЛЬКО если главный предмет поста можно буквально показать на коротком видео (животное, растение, природное явление, космос, город или место, транспорт). Для событий, людей, искусства, истории, медицины и абстрактных тем — пустая строка "".
 - category: тема поста, одно слово из списка: space, history, art, nature, science, other.
@@ -124,7 +125,7 @@ PROMPT = """Ты автор популярного Telegram-канала с ин
 - quiz: викторина ТОЛЬКО по тому, что прямо написано в text (не по остальному материалу) — читатель должен найти ответ в посте; правильный ответ должен дословно встречаться в text. Формулируй вопрос словами из text: не используй в вопросе и вариантах термины и названия, которых нет в тексте поста. question до 200 символов, options ровно 4 варианта до 90 символов каждый, correct — индекс правильного (0-3), explanation до 180 символов.
 
 Ответь строго одним JSON-объектом:
-{{"fact": "...", "interest": 0, "title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
+{{"fact": "...", "interest": 0, "subject": "...", "title": "...", "text": "...", "hashtags": ["..."], "media_queries": ["..."], "video_query": "...", "category": "...", "image_prompt": "...", "quiz": {{"question": "...", "options": ["...", "...", "...", "..."], "correct": 0, "explanation": "..."}}}}
 
 Материал ({kind}, «{title}»):
 {material}
@@ -203,6 +204,7 @@ def validate_post(p):
     p["video_query"] = p.get("video_query") if isinstance(p.get("video_query"), str) else ""
     p["category"] = p.get("category") if p.get("category") in media.CATEGORIES else "other"
     p["image_prompt"] = p.get("image_prompt") if isinstance(p.get("image_prompt"), str) else ""
+    p["subject"] = p.get("subject").strip()[:80] if isinstance(p.get("subject"), str) else ""
     q = p.get("quiz")
     ok_quiz = (isinstance(q, dict) and isinstance(q.get("question"), str)
                and isinstance(q.get("options"), list) and len(q["options"]) == 4
@@ -319,6 +321,11 @@ def fix_opening(post, fn):
     post = {**post, "text": clean_text(post["text"], post["title"])}   # сначала убираем мусор сверху
     paras = post["text"].strip().split("\n\n", 1)
     first_sentence = re.split(r"(?<=[.!?])\s", paras[0], 1)[0]
+    rest = paras[1] if len(paras) > 1 else ""
+    if len(paras[0]) < 60 and len(rest) > 250 and not needs_new_opening(rest):
+        # «Зачем? Всё дело в контракте.» — короткий обрывок, без заголовка непонятен; просто убираем
+        log("Убрал короткий первый абзац-обрывок")
+        return {**post, "text": rest}
     if not needs_new_opening(paras[0]):
         return post
     new = ""

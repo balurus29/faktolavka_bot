@@ -397,6 +397,21 @@ def collect_photos(src, post, state, n):
                     break
         except (requests.RequestException, ValueError, KeyError) as e:
             log(f"wikimedia: недоступен ({e.__class__.__name__})")
+    subject = (post.get("subject") or "").strip()
+    subject_words = [w for w in re.findall(r"[a-z0-9]+", subject.lower()) if len(w) > 2]
+    if subject_words and len(candidates) < n:
+        # Ищем фото главного героя поста по его названию в Википедии. В описании должны совпасть
+        # все слова названия — так находится сама Амелия Эрхарт, а не росток «к деревьям».
+        try:
+            for item in photos_wikimedia(subject)[:10]:
+                tags = (item.get("tags") or "").lower()
+                if (all(w in tags for w in subject_words) and item["id"] not in state["used_media"]
+                        and not is_morbid(item) and item["id"] not in {c["id"] for c in candidates}
+                        and (category == "space" or not NOT_EARTH.search(tags))):
+                    candidates.append({**item, "trusted": True})
+                    break
+        except (requests.RequestException, ValueError, KeyError) as e:
+            log(f"wikimedia: недоступен ({e.__class__.__name__})")
     if src.get("topic") == "pop":
         # Песни, фильмы, спорт: названия состоят из обычных слов («Kiss Me More» -> кепка «Kiss me I'm
         # Irish»), поиск по ним даёт случайные картинки. Берём только картинку из самой статьи.
