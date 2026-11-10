@@ -2,13 +2,16 @@ name: Автопостинг
 
 on:
   schedule:
-    # Время в UTC. Москва = UTC+3.
-    - cron: "7 6 * * *"     # 09:07 МСК
-    - cron: "13 10 * * *"   # 13:13 МСК
-    - cron: "21 15 * * *"   # 18:21 МСК
-    - cron: "9 18 * * *"    # 21:09 МСК
+    # Запасной запуск каждые 20 минут с 08:00 до 23:59 МСК (время в UTC: 5-20).
+    # Сам бот публикует пост только когда наступило время из POST_SLOTS (09:00, 13:00, 18:00, 21:00)
+    # и пост за это время ещё не выходил. Основной точный запуск — через cron-job.org (см. README).
+    - cron: "4,24,44 5-20 * * *"
   workflow_dispatch:
     inputs:
+      force:
+        description: "Опубликовать сейчас, не дожидаясь расписания"
+        type: boolean
+        default: true
       type:
         description: "Формат поста"
         default: auto
@@ -67,7 +70,8 @@ jobs:
           AI_IMAGE_FALLBACK: ${{ vars.AI_IMAGE_FALLBACK }}
           CHANNEL_SIGNATURE: ${{ vars.CHANNEL_SIGNATURE }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-        run: python bot.py --type "${{ inputs.type || 'auto' }}"
+          POST_SLOTS: ${{ vars.POST_SLOTS }}
+        run: python bot.py --type "${{ inputs.type || 'auto' }}" ${{ inputs.force && '--force' || '' }}
 
       - name: Сохранить историю постов
         run: |
