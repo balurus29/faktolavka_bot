@@ -577,7 +577,8 @@ def brand_card(title):
         mask = mask.resize((400, 400), Image.LANCZOS)
         d.ellipse((62, 182, 478, 598), fill=CREAM)
         im.paste(av, (70, 190), mask)
-        text = re.sub(r"^[^\w«]+", "", title).strip()
+        text = re.sub(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D\u20E3]", "", title)
+        text = re.sub(r"^[^\w«]+", "", text).strip()          # эмодзи шрифт не рисует — убираем
         x0, maxw = 540, 680
         for size in (76, 68, 60, 52, 46):                              # подбираем размер, чтобы влезло
             font = ImageFont.truetype(black, size)

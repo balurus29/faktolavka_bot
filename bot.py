@@ -45,6 +45,10 @@ SIGNATURE = os.getenv("CHANNEL_SIGNATURE", "")         # например «👉
 
 # Доли форматов постов (в процентах). Меняйте как хотите.
 POST_TYPE_WEIGHTS = {"photo": 55, "album": 15, "video": 15, "mixed": 15}
+# Время постов по Москве. Бот публикует пост, если наступило очередное время и пост за него
+# ещё не выходил. Запуски GitHub часто опаздывают, поэтому запускаем бота часто, а решает он сам.
+POST_SLOTS = [s.strip() for s in (os.getenv("POST_SLOTS", "") or "09:00,13:00,18:00,21:00").split(",") if s.strip()]
+SLOT_WINDOW_HOURS = 3        # если запуск опоздал больше чем на 3 часа — этот пост пропускаем
 QUIZ_CHANCE = 0.3          # вероятность добавить викторину после поста
 # Публиковать ли выдержку из статьи без обработки, если нейросеть недоступна. По умолчанию нет:
 # лучше пропустить запуск, чем выложить сырой текст.
@@ -519,12 +523,28 @@ def choose_type(forced):
     return random.choices(kinds, weights)[0]
 
 
+def due_slot(state, now=None):
+    """Время поста, которое наступило и ещё не отработано, или None."""
+    now = now or datetime.now(MSK)
+    last = state.get("last_slot", "")
+    for hm in sorted(POST_SLOTS, reverse=True):
+        h, m = map(int, hm.split(":"))
+        slot = now.replace(hour=h, minute=m, second=0, microsecond=0)
+        if slot <= now:
+            key = slot.strftime("%Y-%m-%d %H:%M")
+            if key > last and now - slot <= timedelta(hours=SLOT_WINDOW_HOURS):
+                return key
+            return None
+    return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--type", default="auto",
                     choices=["auto", "photo", "album", "video", "mixed", "text"])
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-quiz", action="store_true")
+    ap.add_argument("--force", action="store_true", help="опубликовать сейчас, без проверки расписания")
     args = ap.parse_args()
 
     if not args.dry_run and not (TG_TOKEN and CHANNEL):
@@ -533,6 +553,10 @@ def main():
         log("Внимание: нет ключей нейросетей, посты будут без обработки")
 
     state = load_state()
+    slot = due_slot(state)
+    if not (args.force or args.dry_run) and not slot:
+        log("По расписанию сейчас поста нет — выхожу")
+        return
     kind = choose_type(args.type)
     tried = set()
     for attempt in range(4):
@@ -611,6 +635,8 @@ def main():
     state["used_media"] += [p["id"] for p in photos] + ([video["id"]] if video else [])
     state["posts"] = state.get("posts", 0) + 1
     state["last_post"] = datetime.now(MSK).isoformat(timespec="minutes")
+    if slot:
+        state["last_slot"] = slot
     save_state(state)
 
 
