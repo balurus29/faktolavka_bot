@@ -58,7 +58,8 @@ BRAND_CARDS = os.getenv("BRAND_CARDS", "1") != "0"   # фирменная обл
 # Источники фактов, их доли и фильтр тем — в sources.py, источники картинок — в media.py.
 
 STATE_FILE = pathlib.Path(__file__).with_name("state.json")
-UA = "FactsChannelAutopost/1.0 (Telegram channel bot; python-requests)"
+# Википедия требует в User-Agent название бота и контакт, иначе чаще отвечает «429 Too Many Requests»
+UA = "FaktolavkaBot/1.1 (https://t.me/faktolavka; Telegram channel autoposter) python-requests"
 MSK = timezone(timedelta(hours=3))
 CAPTION_LIMIT = 1024       # лимит подписи к медиа в Telegram
 

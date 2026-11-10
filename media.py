@@ -262,6 +262,19 @@ def image_license(src):
 
 # ---------------------------------------------------------------- сбор
 def download(url, limit, kind="image"):
+    for attempt in range(3):                     # Wikimedia иногда отвечает 429 — ждём и повторяем
+        try:
+            return _download(url, limit, kind)
+        except requests.HTTPError as e:
+            if e.response is None or e.response.status_code != 429 or attempt == 2:
+                raise
+            wait = min(int(e.response.headers.get("Retry-After", "0") or 0) or 5 * (attempt + 1), 20)
+            log(f"Сайт картинки просит подождать ({wait} с)")
+            import time
+            time.sleep(wait)
+
+
+def _download(url, limit, kind="image"):
     with session.get(url, stream=True, timeout=90) as r:
         r.raise_for_status()
         ctype = r.headers.get("Content-Type", "")
@@ -465,6 +478,12 @@ def collect_photos(src, post, state, n):
         if h is not None:
             hashes.append(h)
         photos.append({**c, "data": data, "name": f"p{len(photos)}.jpg"})
+    if not photos and CF_ACCOUNT and CF_TOKEN and src.get("topic") != "pop" \
+            and not any(c["id"].startswith("ai-cf:") for c in candidates):
+        # картинки нашлись, но не скачались (например, 429) — рисуем иллюстрацию
+        gen = generate_cf(post.get("image_prompt") or (queries[0] if queries else src.get("title", "")))
+        if gen:
+            photos.append({**gen, "name": "p0.jpg"})
     return photos
 
 
