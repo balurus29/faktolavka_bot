@@ -132,7 +132,8 @@
   "wiki:Партизаны Югославии — граждане СССР",
   "wiki:Пердикка II",
   "wiki:Пеканбару",
-  "rss:https://www.sciencedaily.com/releases/2026/09/260911204910.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/09/260911204910.htm",
+  "otd:1983:Билл Гейтс представил первую версию операционной системы Win"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -251,10 +252,11 @@
   "commons:55060346",
   "card:dyk:en:... that up to fifty starfish shrimps have been found",
   "commons:22441782",
-  "pixabay-photo:5017973"
+  "pixabay-photo:5017973",
+  "card:otd:1983:Билл Гейтс представил первую версию операционной си"
  ],
- "posts": 89,
- "last_post": "2026-11-10T16:31+03:00",
+ "posts": 90,
+ "last_post": "2026-11-10T18:32+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -277,5 +279,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-10 13:00"
+ "last_slot": "2026-11-10 18:00"
 }
