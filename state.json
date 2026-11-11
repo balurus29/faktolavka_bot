@@ -142,7 +142,8 @@
   "wiki:en:R U Professional",
   "rss:https://www.sciencedaily.com/releases/2026/10/261014015457.htm",
   "dyk:en:... that inmates from New York state prisons can be involuntarily committed at t",
-  "rss:https://www.techinsider.ru/news/news-1749361-sber-vypustil-novye-lampy-s-podderjkoi-matter-i-upravleniem-bez-interneta/"
+  "rss:https://www.techinsider.ru/news/news-1749361-sber-vypustil-novye-lampy-s-podderjkoi-matter-i-upravleniem-bez-interneta/",
+  "wiki:en:Chinua Achebe"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -267,10 +268,11 @@
   "nasa:PIA24568",
   "pixabay-photo:447801",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Marcy%2C_New_York_%28Central_New_York_Psychiatric_Center%29_%28408125278%29.jpg/1280px-Marcy%2C_New_York_%28Central_New_York_Psychiatric_Center%29_%28408125278%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "pixabay-photo:3779361"
+  "pixabay-photo:3779361",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Chinua_Achebe%2C_1966.jpg/1280px-Chinua_Achebe%2C_1966.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 95,
- "last_post": "2026-11-11T18:01+03:00",
+ "posts": 96,
+ "last_post": "2026-11-11T21:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -293,5 +295,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-11 18:00"
+ "last_slot": "2026-11-11 21:00"
 }
