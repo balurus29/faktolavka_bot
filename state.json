@@ -140,7 +140,8 @@
   "wiki:Битва на горе Чегар",
   "wiki:Чемпионат мира по фигурному катанию 2011",
   "wiki:en:R U Professional",
-  "rss:https://www.sciencedaily.com/releases/2026/10/261014015457.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/10/261014015457.htm",
+  "dyk:en:... that inmates from New York state prisons can be involuntarily committed at t"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -263,10 +264,11 @@
   "card:otd:1983:Билл Гейтс представил первую версию операционной си",
   "commons:120161028",
   "nasa:PIA24568",
-  "pixabay-photo:447801"
+  "pixabay-photo:447801",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Marcy%2C_New_York_%28Central_New_York_Psychiatric_Center%29_%28408125278%29.jpg/1280px-Marcy%2C_New_York_%28Central_New_York_Psychiatric_Center%29_%28408125278%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 93,
- "last_post": "2026-11-11T09:02+03:00",
+ "posts": 94,
+ "last_post": "2026-11-11T13:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -289,5 +291,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-11 09:00"
+ "last_slot": "2026-11-11 13:00"
 }
