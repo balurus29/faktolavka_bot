@@ -148,7 +148,9 @@
   "dyk:en:... that the Chicago Cubs were awarded the Laureus World Sports Award for Team o",
   "rss:https://www.sciencedaily.com/releases/2026/06/260618041450.htm",
   "rss:https://www.sciencedaily.com/releases/2026/11/261108202703.htm",
-  "rss:https://www.sciencedaily.com/releases/2026/11/261110042558.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/11/261110042558.htm",
+  "rss:https://www.nkj.ru/prtnews/60761/",
+  "rss:https://www.nkj.ru/news/60730/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -278,10 +280,11 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/d/d5/Fishermen_in_Kafue.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:66354723",
   "commons:1317915",
-  "commons:43071595"
+  "commons:43071595",
+  "commons:158107976"
  ],
- "posts": 100,
- "last_post": "2026-11-12T18:02+03:00",
+ "posts": 101,
+ "last_post": "2026-11-12T21:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -304,5 +307,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-12 18:00"
+ "last_slot": "2026-11-12 21:00"
 }
