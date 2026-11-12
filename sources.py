@@ -114,6 +114,9 @@ VIOLENT_TEXT = re.compile(
     r"казн[иеё]\w*|казнь|\bубил[аио]?\b|\bубит[аыо]?\b|убийств[оаеу]?\b|убийц|расстрел|резн[яиюе]|"
     r"обезглав|повесил|пытк|растерзал|плетью|плетей|\bплеть|порк[аиу]|кнут[ао]?м|высекл|кандал|"
     r"инквизиц|аутодафе|lashes|flogg|whipp|inquisition|auto-da-f|"
+    r"катастроф(?!ически)|отравил|отравлен|токсичн\w* (?:отход|жидкост|сброс)|утечк\w* (?:нефти|химик|токсич)|"
+    r"погиб|жертв[аы]?\b|разрушени\w* дамб|экологическ\w* бедстви|"
+    r"disaster|catastroph|toxic spill|poisoned|death toll|casualt|"
     r"executed|execution|murder|killed|massacre|beheaded|tortur",
     re.IGNORECASE)
 
