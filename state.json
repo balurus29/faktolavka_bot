@@ -150,7 +150,9 @@
   "rss:https://www.sciencedaily.com/releases/2026/11/261108202703.htm",
   "rss:https://www.sciencedaily.com/releases/2026/11/261110042558.htm",
   "rss:https://www.nkj.ru/prtnews/60761/",
-  "rss:https://www.nkj.ru/news/60730/"
+  "rss:https://www.nkj.ru/news/60730/",
+  "wiki:Твоим освободителям, Донбасс",
+  "wiki:Тайны Ниро Вульфа"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -281,10 +283,11 @@
   "commons:66354723",
   "commons:1317915",
   "commons:43071595",
-  "commons:158107976"
+  "commons:158107976",
+  "commons:6066131"
  ],
- "posts": 101,
- "last_post": "2026-11-12T21:01+03:00",
+ "posts": 102,
+ "last_post": "2026-11-13T09:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -305,7 +308,7 @@
   "general",
   "general",
   "general",
-  "general"
+  "pop"
  ],
- "last_slot": "2026-11-12 21:00"
+ "last_slot": "2026-11-13 09:00"
 }
