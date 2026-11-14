@@ -160,7 +160,10 @@
   "wiki:Валлийский язык",
   "rss:https://www.sciencedaily.com/releases/2026/05/260523103939.htm",
   "rss:https://www.sciencedaily.com/releases/2026/06/260604044258.htm",
-  "wiki:Майк Тайсон — Джеймс Дуглас"
+  "wiki:Майк Тайсон — Джеймс Дуглас",
+  "rss:https://elementy.ru/novosti_nauki/434438/Raspredelennoe_sotsialnoe_obuchenie_kak_zhivotnye_mogut_sobirat_slozhnoe_povedenie",
+  "dyk:en:... that Avi Nissenkorn, former chairman of Histadrut, Israel's largest trade un",
+  "dyk:en:... that Australians refused to call this bastard a bastard?"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -298,12 +301,12 @@
   "commons:120481623",
   "commons:132682820",
   "pixabay-photo:9030680",
-  "commons:20445366"
+  "commons:20445366",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/46/Ebbo_Bastard.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 108,
- "last_post": "2026-11-14T18:01+03:00",
+ "posts": 109,
+ "last_post": "2026-11-14T21:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -322,7 +325,8 @@
   "general",
   "general",
   "general",
-  "pop"
+  "pop",
+  "general"
  ],
- "last_slot": "2026-11-14 18:00"
+ "last_slot": "2026-11-14 21:00"
 }
