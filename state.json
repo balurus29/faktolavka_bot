@@ -158,7 +158,8 @@
   "wiki:Жеребцова, Ольга Александровна",
   "dyk:en:... that playwright and journalist Refik Erduran fourth marriage, to his third w",
   "wiki:Валлийский язык",
-  "rss:https://www.sciencedaily.com/releases/2026/05/260523103939.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/05/260523103939.htm",
+  "rss:https://www.sciencedaily.com/releases/2026/06/260604044258.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -294,12 +295,12 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Holland_Tunnel_Entrance.jpg/1280px-Holland_Tunnel_Entrance.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/d/d1/Olga_Zherebtsova_by_Jean-Louis_Voille.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:120481623",
-  "commons:132682820"
+  "commons:132682820",
+  "pixabay-photo:9030680"
  ],
- "posts": 106,
- "last_post": "2026-11-14T09:01+03:00",
+ "posts": 107,
+ "last_post": "2026-11-14T13:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -318,7 +319,8 @@
   "general",
   "general",
   "general",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-14 09:00"
+ "last_slot": "2026-11-14 13:00"
 }
