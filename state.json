@@ -166,7 +166,8 @@
   "dyk:en:... that Australians refused to call this bastard a bastard?",
   "dyk:en:... that despite winning consecutive conference championships, UC Riverside High",
   "dyk:en:... that Lorenzo Viotti conducted Massenet's Werther in three productions in ope",
-  "rss:https://habr.com/ru/companies/ru_mts/articles/1098242/?utm_campaign=1098242&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/companies/ru_mts/articles/1098242/?utm_campaign=1098242&utm_source=habrahabr&utm_medium=rss",
+  "rss:https://nplus1.ru/news/2026/11/14/starship-15-start"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -308,10 +309,11 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/46/Ebbo_Bastard.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:135932620",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Lorenzo_Viotti%2C_May_2024.jpg/1280px-Lorenzo_Viotti%2C_May_2024.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "nasa:0102169"
+  "nasa:0102169",
+  "commons:20312408"
  ],
- "posts": 112,
- "last_post": "2026-11-15T18:01+03:00",
+ "posts": 113,
+ "last_post": "2026-11-15T21:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -321,7 +323,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -329,10 +330,11 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
   "general"
  ],
- "last_slot": "2026-11-15 18:00"
+ "last_slot": "2026-11-15 21:00"
 }
