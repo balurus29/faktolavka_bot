@@ -169,7 +169,9 @@
   "rss:https://habr.com/ru/companies/ru_mts/articles/1098242/?utm_campaign=1098242&utm_source=habrahabr&utm_medium=rss",
   "rss:https://nplus1.ru/news/2026/11/14/starship-15-start",
   "rss:https://www.smithsonianmag.com/smart-news/where-did-bats-originate-huge-genetic-study-may-have-settled-the-longstanding-debate-and-rewritten-the-creatures-evolutionary-tree-180989568/",
-  "wiki:Тер-Микаелян, Михаил Леонович"
+  "wiki:Тер-Микаелян, Михаил Леонович",
+  "rss:https://www.nkj.ru/prtnews/60747/",
+  "rss:https://www.nkj.ru/prtnews/60744/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -314,17 +316,17 @@
   "nasa:0102169",
   "commons:20312408",
   "commons:48257053",
-  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/2/25/Mikael_Ter_Mikaelian_2003.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/2/25/Mikael_Ter_Mikaelian_2003.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "pixabay-photo:10435428"
  ],
- "posts": 115,
- "last_post": "2026-11-16T13:01+03:00",
+ "posts": 116,
+ "last_post": "2026-11-16T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -332,6 +334,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -340,5 +343,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-16 13:00"
+ "last_slot": "2026-11-16 18:00"
 }
