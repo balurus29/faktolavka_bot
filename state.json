@@ -168,7 +168,8 @@
   "dyk:en:... that Lorenzo Viotti conducted Massenet's Werther in three productions in ope",
   "rss:https://habr.com/ru/companies/ru_mts/articles/1098242/?utm_campaign=1098242&utm_source=habrahabr&utm_medium=rss",
   "rss:https://nplus1.ru/news/2026/11/14/starship-15-start",
-  "rss:https://www.smithsonianmag.com/smart-news/where-did-bats-originate-huge-genetic-study-may-have-settled-the-longstanding-debate-and-rewritten-the-creatures-evolutionary-tree-180989568/"
+  "rss:https://www.smithsonianmag.com/smart-news/where-did-bats-originate-huge-genetic-study-may-have-settled-the-longstanding-debate-and-rewritten-the-creatures-evolutionary-tree-180989568/",
+  "wiki:Тер-Микаелян, Михаил Леонович"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -312,10 +313,11 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Lorenzo_Viotti%2C_May_2024.jpg/1280px-Lorenzo_Viotti%2C_May_2024.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "nasa:0102169",
   "commons:20312408",
-  "commons:48257053"
+  "commons:48257053",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/2/25/Mikael_Ter_Mikaelian_2003.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 114,
- "last_post": "2026-11-16T09:01+03:00",
+ "posts": 115,
+ "last_post": "2026-11-16T13:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -323,7 +325,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -331,6 +332,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -338,5 +340,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-16 09:00"
+ "last_slot": "2026-11-16 13:00"
 }
