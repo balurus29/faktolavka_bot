@@ -171,7 +171,8 @@
   "rss:https://www.smithsonianmag.com/smart-news/where-did-bats-originate-huge-genetic-study-may-have-settled-the-longstanding-debate-and-rewritten-the-creatures-evolutionary-tree-180989568/",
   "wiki:Тер-Микаелян, Михаил Леонович",
   "rss:https://www.nkj.ru/prtnews/60747/",
-  "rss:https://www.nkj.ru/prtnews/60744/"
+  "rss:https://www.nkj.ru/prtnews/60744/",
+  "dyk:en:... that race car driver J. R. Heffner is his sponsor's vice president of operat"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -317,16 +318,16 @@
   "commons:20312408",
   "commons:48257053",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/2/25/Mikael_Ter_Mikaelian_2003.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
-  "pixabay-photo:10435428"
+  "pixabay-photo:10435428",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/74_JR_Heffner_Hard_Clay_Open.jpg/1280px-74_JR_Heffner_Hard_Clay_Open.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 116,
- "last_post": "2026-11-16T18:01+03:00",
+ "posts": 117,
+ "last_post": "2026-11-16T21:01+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -334,6 +335,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -343,5 +345,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-16 18:00"
+ "last_slot": "2026-11-16 21:00"
 }
