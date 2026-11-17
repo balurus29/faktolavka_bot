@@ -172,7 +172,8 @@
   "wiki:Тер-Микаелян, Михаил Леонович",
   "rss:https://www.nkj.ru/prtnews/60747/",
   "rss:https://www.nkj.ru/prtnews/60744/",
-  "dyk:en:... that race car driver J. R. Heffner is his sponsor's vice president of operat"
+  "dyk:en:... that race car driver J. R. Heffner is his sponsor's vice president of operat",
+  "rss:https://www.techinsider.ru/news/news-1749649-uchenye-obyyasnili-pochemu-my-v-konce-koncov-privykaem-pit-gorkii-kofe/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -319,15 +320,15 @@
   "commons:48257053",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/2/25/Mikael_Ter_Mikaelian_2003.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "pixabay-photo:10435428",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/74_JR_Heffner_Hard_Clay_Open.jpg/1280px-74_JR_Heffner_Hard_Clay_Open.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/74_JR_Heffner_Hard_Clay_Open.jpg/1280px-74_JR_Heffner_Hard_Clay_Open.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "pixabay-photo:2306471"
  ],
- "posts": 117,
- "last_post": "2026-11-16T21:01+03:00",
+ "posts": 118,
+ "last_post": "2026-11-17T09:01+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -335,6 +336,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -345,5 +347,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-16 21:00"
+ "last_slot": "2026-11-17 09:00"
 }
