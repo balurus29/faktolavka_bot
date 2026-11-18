@@ -178,7 +178,10 @@
   "otd:1970:в путешествие по поверхности Луны отправился «Луноход-1».",
   "rss:https://www.sciencedaily.com/releases/2026/10/261026225555.htm",
   "dyk:en:... that a reviewer thought that the two-part \"Friendship Is Magic\" \"[flies] off",
-  "rss:https://habr.com/ru/articles/1108954/?utm_campaign=1108954&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/articles/1108954/?utm_campaign=1108954&utm_source=habrahabr&utm_medium=rss",
+  "otd:1626:папа Урбан VIII освятил в Риме базилику Святого Петра.",
+  "rss:https://www.sciencedaily.com/releases/2026/08/260814235849.htm",
+  "otd:1917:митрополит Тихон избран первым за двести лет патриархом Моск"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -330,12 +333,12 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/b/b2/Resurrection_%2824%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1280px-FullMoon2010.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:15552952",
-  "commons:9551709"
+  "commons:9551709",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/b/b5/Tikhon_of_Moscow.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 122,
- "last_post": "2026-11-18T09:01+03:00",
+ "posts": 123,
+ "last_post": "2026-11-18T13:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -354,7 +357,8 @@
   "general",
   "general",
   "general",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-18 09:00"
+ "last_slot": "2026-11-18 13:00"
 }
