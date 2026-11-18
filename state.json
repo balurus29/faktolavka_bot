@@ -181,7 +181,8 @@
   "rss:https://habr.com/ru/articles/1108954/?utm_campaign=1108954&utm_source=habrahabr&utm_medium=rss",
   "otd:1626:папа Урбан VIII освятил в Риме базилику Святого Петра.",
   "rss:https://www.sciencedaily.com/releases/2026/08/260814235849.htm",
-  "otd:1917:митрополит Тихон избран первым за двести лет патриархом Моск"
+  "otd:1917:митрополит Тихон избран первым за двести лет патриархом Моск",
+  "wiki:Ван Гулик, Роберт"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -334,12 +335,12 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1280px-FullMoon2010.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:15552952",
   "commons:9551709",
-  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/b/b5/Tikhon_of_Moscow.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/b/b5/Tikhon_of_Moscow.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/7/79/%E9%AB%98%E7%BE%85%E4%BD%A9%E8%88%87%E5%90%9F%E6%9C%88%E5%BA%B5.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 123,
- "last_post": "2026-11-18T13:01+03:00",
+ "posts": 124,
+ "last_post": "2026-11-18T18:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -358,7 +359,8 @@
   "general",
   "general",
   "general",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-18 13:00"
+ "last_slot": "2026-11-18 18:00"
 }
