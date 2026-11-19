@@ -185,7 +185,8 @@
   "wiki:Ван Гулик, Роберт",
   "rss:https://www.techinsider.ru/news/news-1749677-dva-moskvicha-zapatentovali-volnovuyu-elektrostanciyu-lishennuyu-glavnogo-nedostatka-ves/",
   "rss:https://www.techinsider.ru/popmem/1749885-batat-ili-obychnaya-kartoshka-kakoi-kartofel-fri-poleznee/",
-  "wiki:Фёдор Кузьмич"
+  "wiki:Фёдор Кузьмич",
+  "rss:https://www.sciencedaily.com/releases/2026/11/261102075903.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -341,13 +342,14 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/b/b5/Tikhon_of_Moscow.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/7/79/%E9%AB%98%E7%BE%85%E4%BD%A9%E8%88%87%E5%90%9F%E6%9C%88%E5%BA%B5.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "commons:10810036",
-  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Feodor_Kuzmich_%28portret%29.jpg/1280px-Feodor_Kuzmich_%28portret%29.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Feodor_Kuzmich_%28portret%29.jpg/1280px-Feodor_Kuzmich_%28portret%29.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "commons:77227920"
  ],
- "posts": 126,
- "last_post": "2026-11-19T09:01+03:00",
+ "posts": 127,
+ "last_post": "2026-11-19T13:01+03:00",
  "recent_topics": [
-  "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -367,5 +369,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-19 09:00"
+ "last_slot": "2026-11-19 13:00"
 }
