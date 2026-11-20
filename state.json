@@ -192,7 +192,8 @@
   "rss:https://habr.com/ru/articles/1105134/?utm_campaign=1105134&utm_source=habrahabr&utm_medium=rss",
   "wiki:Aliens: Colonial Marines",
   "wiki:Первая русская антарктическая экспедиция",
-  "dyk:en:... that the DOX BOX International Documentary Film Festival, founded by Syrian "
+  "dyk:en:... that the DOX BOX International Documentary Film Festival, founded by Syrian ",
+  "rss:https://www.nkj.ru/prtnews/60738/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -352,10 +353,11 @@
   "commons:77227920",
   "ai-cf:7702081214814637649",
   "commons:128292",
-  "commons:87862563"
+  "commons:87862563",
+  "commons:98982166"
  ],
- "posts": 130,
- "last_post": "2026-11-20T09:01+03:00",
+ "posts": 131,
+ "last_post": "2026-11-20T13:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -375,8 +377,8 @@
   "general",
   "general",
   "general",
-  "general",
-  "pop"
+  "pop",
+  "general"
  ],
- "last_slot": "2026-11-20 09:00"
+ "last_slot": "2026-11-20 13:00"
 }
