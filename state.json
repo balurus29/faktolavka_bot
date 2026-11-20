@@ -191,7 +191,8 @@
   "rss:https://www.nkj.ru/prtnews/60725/",
   "rss:https://habr.com/ru/articles/1105134/?utm_campaign=1105134&utm_source=habrahabr&utm_medium=rss",
   "wiki:Aliens: Colonial Marines",
-  "wiki:Первая русская антарктическая экспедиция"
+  "wiki:Первая русская антарктическая экспедиция",
+  "dyk:en:... that the DOX BOX International Documentary Film Festival, founded by Syrian "
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -350,10 +351,11 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Feodor_Kuzmich_%28portret%29.jpg/1280px-Feodor_Kuzmich_%28portret%29.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:77227920",
   "ai-cf:7702081214814637649",
-  "commons:128292"
+  "commons:128292",
+  "commons:87862563"
  ],
- "posts": 129,
- "last_post": "2026-11-19T21:01+03:00",
+ "posts": 130,
+ "last_post": "2026-11-20T09:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -374,7 +376,7 @@
   "general",
   "general",
   "general",
-  "general"
+  "pop"
  ],
- "last_slot": "2026-11-19 21:00"
+ "last_slot": "2026-11-20 09:00"
 }
