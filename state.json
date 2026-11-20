@@ -193,7 +193,8 @@
   "wiki:Aliens: Colonial Marines",
   "wiki:Первая русская антарктическая экспедиция",
   "dyk:en:... that the DOX BOX International Documentary Film Festival, founded by Syrian ",
-  "rss:https://www.nkj.ru/prtnews/60738/"
+  "rss:https://www.nkj.ru/prtnews/60738/",
+  "apod:2026-08-31"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -354,10 +355,11 @@
   "ai-cf:7702081214814637649",
   "commons:128292",
   "commons:87862563",
-  "commons:98982166"
+  "commons:98982166",
+  "commons:12341"
  ],
- "posts": 131,
- "last_post": "2026-11-20T13:01+03:00",
+ "posts": 132,
+ "last_post": "2026-11-20T18:02+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -376,9 +378,9 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-20 13:00"
+ "last_slot": "2026-11-20 18:00"
 }
