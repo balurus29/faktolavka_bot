@@ -197,7 +197,8 @@
   "apod:2026-08-31",
   "rss:https://www.sciencedaily.com/releases/2026/11/261116023403.htm",
   "wiki:en:Fader Bergström",
-  "dyk:en:... that a 1905 steam-powered pump was assembled on-site in Virginia with its ho"
+  "dyk:en:... that a 1905 steam-powered pump was assembled on-site in Virginia with its ho",
+  "rss:https://habr.com/ru/companies/ru_mts/articles/1104484/?utm_campaign=1104484&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -364,12 +365,14 @@
   "pixabay-photo:5946657",
   "commons:33784281",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Epistel_63_Fader_Bergstr%C3%B6m_st%C3%A4m_up_och_klinga.jpg/1280px-Epistel_63_Fader_Bergstr%C3%B6m_st%C3%A4m_up_och_klinga.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/c/cb/Crystal_Spring_Steam_Pumping_Station.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/c/cb/Crystal_Spring_Steam_Pumping_Station.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "commons:86098",
+  "nasa:PIA22250",
+  "nasa:PIA26380"
  ],
- "posts": 135,
- "last_post": "2026-11-21T13:01+03:00",
+ "posts": 136,
+ "last_post": "2026-11-21T21:02+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -388,7 +391,8 @@
   "general",
   "general",
   "general",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-21 13:00"
+ "last_slot": "2026-11-21 21:00"
 }
