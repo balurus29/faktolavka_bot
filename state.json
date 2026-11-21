@@ -195,7 +195,8 @@
   "dyk:en:... that the DOX BOX International Documentary Film Festival, founded by Syrian ",
   "rss:https://www.nkj.ru/prtnews/60738/",
   "apod:2026-08-31",
-  "rss:https://www.sciencedaily.com/releases/2026/11/261116023403.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/11/261116023403.htm",
+  "wiki:en:Fader Bergström"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -360,12 +361,12 @@
   "commons:12341",
   "commons:37462509",
   "pixabay-photo:5946657",
-  "commons:33784281"
+  "commons:33784281",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Epistel_63_Fader_Bergstr%C3%B6m_st%C3%A4m_up_och_klinga.jpg/1280px-Epistel_63_Fader_Bergstr%C3%B6m_st%C3%A4m_up_och_klinga.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 133,
- "last_post": "2026-11-20T21:01+03:00",
+ "posts": 134,
+ "last_post": "2026-11-21T09:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -384,7 +385,8 @@
   "pop",
   "general",
   "general",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-20 21:00"
+ "last_slot": "2026-11-21 09:00"
 }
