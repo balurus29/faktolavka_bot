@@ -201,7 +201,8 @@
   "rss:https://habr.com/ru/companies/ru_mts/articles/1104484/?utm_campaign=1104484&utm_source=habrahabr&utm_medium=rss",
   "rss:https://www.sciencedaily.com/releases/2026/06/260623083146.htm",
   "wiki:en:Thomas de la More",
-  "wiki:en:Dance the Night"
+  "wiki:en:Dance the Night",
+  "rss:https://www.smithsonianmag.com/smart-news/a-team-of-astronomers-thinks-they-have-identified-the-exact-night-sky-that-inspired-vincent-van-gogh-starry-Night-not-everyone-is-convinced-180989744/"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -373,12 +374,12 @@
   "nasa:PIA22250",
   "nasa:PIA26380",
   "nasa:PIA08557",
-  "commons:31900541"
+  "commons:31900541",
+  "commons:9860"
  ],
- "posts": 138,
- "last_post": "2026-11-22T13:01+03:00",
+ "posts": 139,
+ "last_post": "2026-11-22T18:01+03:00",
  "recent_topics": [
-  "general",
   "general",
   "general",
   "general",
@@ -397,7 +398,8 @@
   "general",
   "general",
   "general",
-  "pop"
+  "pop",
+  "general"
  ],
- "last_slot": "2026-11-22 13:00"
+ "last_slot": "2026-11-22 18:00"
 }
