@@ -204,7 +204,9 @@
   "wiki:en:Dance the Night",
   "rss:https://www.smithsonianmag.com/smart-news/a-team-of-astronomers-thinks-they-have-identified-the-exact-night-sky-that-inspired-vincent-van-gogh-starry-Night-not-everyone-is-convinced-180989744/",
   "rss:https://nplus1.ru/news/2026/11/20/roman-infant-with-chicken",
-  "rss:https://www.nkj.ru/prtnews/60820/"
+  "rss:https://www.nkj.ru/prtnews/60820/",
+  "dyk:en:... that Armando Ríos Piter declined his own party's nomination for Governor of ",
+  "dyk:en:... that harpsichordist Pieter-Jan Belder recorded the complete Fitzwilliam Virg"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -379,10 +381,11 @@
   "commons:31900541",
   "commons:9860",
   "ai-cf:6666849035947240302",
-  "commons:1636245"
+  "commons:1636245",
+  "commons:60231919"
  ],
- "posts": 141,
- "last_post": "2026-11-23T09:01+03:00",
+ "posts": 142,
+ "last_post": "2026-11-23T13:02+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -391,7 +394,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -401,9 +403,10 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general"
  ],
- "last_slot": "2026-11-23 09:00"
+ "last_slot": "2026-11-23 13:00"
 }
