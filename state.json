@@ -206,7 +206,8 @@
   "rss:https://nplus1.ru/news/2026/11/20/roman-infant-with-chicken",
   "rss:https://www.nkj.ru/prtnews/60820/",
   "dyk:en:... that Armando Ríos Piter declined his own party's nomination for Governor of ",
-  "dyk:en:... that harpsichordist Pieter-Jan Belder recorded the complete Fitzwilliam Virg"
+  "dyk:en:... that harpsichordist Pieter-Jan Belder recorded the complete Fitzwilliam Virg",
+  "rss:https://habr.com/ru/articles/1110370/?utm_campaign=1110370&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -382,10 +383,11 @@
   "commons:9860",
   "ai-cf:6666849035947240302",
   "commons:1636245",
-  "commons:60231919"
+  "commons:60231919",
+  "commons:12035680"
  ],
- "posts": 142,
- "last_post": "2026-11-23T13:02+03:00",
+ "posts": 143,
+ "last_post": "2026-11-23T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -393,7 +395,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -403,10 +404,11 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
   "general"
  ],
- "last_slot": "2026-11-23 13:00"
+ "last_slot": "2026-11-23 18:00"
 }
