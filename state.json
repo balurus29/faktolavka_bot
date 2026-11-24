@@ -212,7 +212,9 @@
   "rss:https://www.techinsider.ru/news/news-1750029-pochemu-mujchiny-mogut-tyajelee-perenosit-virusnye-infekcii-uchenye-nashli-vozmojnoe-obyyasnenie/",
   "apod:2026-09-27",
   "apod:2026-09-21",
-  "rss:https://www.sciencedaily.com/releases/2026/09/260925005412.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/09/260925005412.htm",
+  "otd:2015:турецкий истребитель сбил российский Су-24 в районе сирийско",
+  "rss:https://habr.com/ru/articles/1100096/?utm_campaign=1100096&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -392,14 +394,14 @@
   "commons:12035680",
   "pixabay-photo:1332472",
   "pixabay-photo:4952933",
-  "pixabay-photo:79734"
+  "pixabay-photo:79734",
+  "commons:24484298"
  ],
- "posts": 146,
- "last_post": "2026-11-24T13:01+03:00",
+ "posts": 147,
+ "last_post": "2026-11-24T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -409,6 +411,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -418,5 +421,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-24 13:00"
+ "last_slot": "2026-11-24 18:00"
 }
