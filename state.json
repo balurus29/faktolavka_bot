@@ -209,7 +209,10 @@
   "dyk:en:... that harpsichordist Pieter-Jan Belder recorded the complete Fitzwilliam Virg",
   "rss:https://habr.com/ru/articles/1110370/?utm_campaign=1110370&utm_source=habrahabr&utm_medium=rss",
   "rss:https://www.nkj.ru/prtnews/60851/",
-  "rss:https://www.techinsider.ru/news/news-1750029-pochemu-mujchiny-mogut-tyajelee-perenosit-virusnye-infekcii-uchenye-nashli-vozmojnoe-obyyasnenie/"
+  "rss:https://www.techinsider.ru/news/news-1750029-pochemu-mujchiny-mogut-tyajelee-perenosit-virusnye-infekcii-uchenye-nashli-vozmojnoe-obyyasnenie/",
+  "apod:2026-09-27",
+  "apod:2026-09-21",
+  "rss:https://www.sciencedaily.com/releases/2026/09/260925005412.htm"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -388,15 +391,15 @@
   "commons:60231919",
   "commons:12035680",
   "pixabay-photo:1332472",
-  "pixabay-photo:4952933"
+  "pixabay-photo:4952933",
+  "pixabay-photo:79734"
  ],
- "posts": 145,
- "last_post": "2026-11-24T09:01+03:00",
+ "posts": 146,
+ "last_post": "2026-11-24T13:01+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -406,6 +409,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -414,5 +418,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-24 09:00"
+ "last_slot": "2026-11-24 13:00"
 }
