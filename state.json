@@ -214,7 +214,8 @@
   "apod:2026-09-21",
   "rss:https://www.sciencedaily.com/releases/2026/09/260925005412.htm",
   "otd:2015:турецкий истребитель сбил российский Су-24 в районе сирийско",
-  "rss:https://habr.com/ru/articles/1100096/?utm_campaign=1100096&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/articles/1100096/?utm_campaign=1100096&utm_source=habrahabr&utm_medium=rss",
+  "wiki:Чебоксарская ГЭС"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -395,13 +396,13 @@
   "pixabay-photo:1332472",
   "pixabay-photo:4952933",
   "pixabay-photo:79734",
-  "commons:24484298"
+  "commons:24484298",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/%D0%A7%D0%B5%D0%B1%D0%BE%D0%BA%D1%81%D0%B0%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%93%D0%AD%D0%A1.JPG/1280px-%D0%A7%D0%B5%D0%B1%D0%BE%D0%BA%D1%81%D0%B0%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%93%D0%AD%D0%A1.JPG?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 147,
- "last_post": "2026-11-24T18:01+03:00",
+ "posts": 148,
+ "last_post": "2026-11-24T21:01+03:00",
  "recent_topics": [
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -411,6 +412,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -421,5 +423,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-24 18:00"
+ "last_slot": "2026-11-24 21:00"
 }
