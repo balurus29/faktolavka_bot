@@ -220,7 +220,8 @@
   "wiki:Линь Хуэйинь",
   "wiki:Ле Плонжон, Огюст",
   "wiki:Фёдоров, Антон Павлович",
-  "rss:https://habr.com/ru/articles/1106152/?utm_campaign=1106152&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/articles/1106152/?utm_campaign=1106152&utm_source=habrahabr&utm_medium=rss",
+  "dyk:en:... that Max-Emmanuel Mader pretended to be deaf and mute when Nazi Germany occu"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -404,10 +405,11 @@
   "commons:24484298",
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/%D0%A7%D0%B5%D0%B1%D0%BE%D0%BA%D1%81%D0%B0%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%93%D0%AD%D0%A1.JPG/1280px-%D0%A7%D0%B5%D0%B1%D0%BE%D0%BA%D1%81%D0%B0%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%93%D0%AD%D0%A1.JPG?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/6/68/%D0%90%D0%BD%D1%82%D0%BE%D0%BD_%D0%A4%D0%B5%D0%B4%D0%BE%D1%80%D0%BE%D0%B2.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
-  "pixabay-photo:3628710"
+  "pixabay-photo:3628710",
+  "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Drapeau_du_R%C3%A9giment_de_marche_de_la_L%C3%A9gion_%C3%A9trang%C3%A8re_%28RMLE%29_en_1918.jpg/1280px-Drapeau_du_R%C3%A9giment_de_marche_de_la_L%C3%A9gion_%C3%A9trang%C3%A8re_%28RMLE%29_en_1918.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail"
  ],
- "posts": 150,
- "last_post": "2026-11-25T13:01+03:00",
+ "posts": 151,
+ "last_post": "2026-11-25T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -415,7 +417,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -428,7 +429,8 @@
   "general",
   "general",
   "pop",
+  "general",
   "general"
  ],
- "last_slot": "2026-11-25 13:00"
+ "last_slot": "2026-11-25 18:00"
 }
