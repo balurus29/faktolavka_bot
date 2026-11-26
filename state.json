@@ -225,7 +225,9 @@
   "rss:https://www.smithsonianmag.com/smart-news/archaeologists-in-england-discovered-8000-roman-era-frog-bones-in-a-single-ditch-they-just-solved-the-mystery-how-the-amphibians-ended-up-there-180989868/",
   "otd:1939:Майнильский инцидент, послуживший предлогом к нападению СССР",
   "rss:https://www.sciencedaily.com/releases/2026/10/261027063702.htm",
-  "wiki:en:Vampire"
+  "wiki:en:Vampire",
+  "rss:https://www.techinsider.ru/news/news-1750201-uaz-patriot-poluchil-dizel-na-320-nyuton-metrov-i-elektromehanicheskuyu-razdatku/",
+  "wiki:Оберон (спутник)"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -413,14 +415,14 @@
   "wiki-img:https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Drapeau_du_R%C3%A9giment_de_marche_de_la_L%C3%A9gion_%C3%A9trang%C3%A8re_%28RMLE%29_en_1918.jpg/1280px-Drapeau_du_R%C3%A9giment_de_marche_de_la_L%C3%A9gion_%C3%A9trang%C3%A8re_%28RMLE%29_en_1918.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
   "commons:44656536",
   "pixabay-photo:67574",
-  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/4a/Philip_Burne-Jones_-_The_Vampire.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/4a/Philip_Burne-Jones_-_The_Vampire.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "wiki-img:https://upload.wikimedia.org/wikipedia/commons/6/6d/Oberon_in_true_color_by_Kevin_M._Gill.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
  ],
- "posts": 154,
- "last_post": "2026-11-26T13:01+03:00",
+ "posts": 155,
+ "last_post": "2026-11-26T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -433,11 +435,12 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
   "general",
   "general"
  ],
- "last_slot": "2026-11-26 13:00"
+ "last_slot": "2026-11-26 18:00"
 }
