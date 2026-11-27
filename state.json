@@ -230,7 +230,8 @@
   "wiki:Оберон (спутник)",
   "rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poyavilis_eshchyo_dva_predka",
   "rss:https://habr.com/ru/articles/1105700/?utm_campaign=1105700&utm_source=habrahabr&utm_medium=rss",
-  "rss:https://www.sciencedaily.com/releases/2026/11/261108203832.htm"
+  "rss:https://www.sciencedaily.com/releases/2026/11/261108203832.htm",
+  "dyk:en:... that Morris H. Whitehouse designed several Oregon buildings which made it to"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -422,10 +423,11 @@
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/6/6d/Oberon_in_true_color_by_Kevin_M._Gill.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "card:rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poya",
   "pixabay-photo:6998194",
-  "pixabay-photo:115162"
+  "pixabay-photo:115162",
+  "commons:27570451"
  ],
- "posts": 158,
- "last_post": "2026-11-27T13:01+03:00",
+ "posts": 159,
+ "last_post": "2026-11-27T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
@@ -436,7 +438,6 @@
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -445,8 +446,9 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general"
  ],
- "last_slot": "2026-11-27 13:00"
+ "last_slot": "2026-11-27 18:00"
 }
