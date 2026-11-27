@@ -228,7 +228,8 @@
   "wiki:en:Vampire",
   "rss:https://www.techinsider.ru/news/news-1750201-uaz-patriot-poluchil-dizel-na-320-nyuton-metrov-i-elektromehanicheskuyu-razdatku/",
   "wiki:Оберон (спутник)",
-  "rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poyavilis_eshchyo_dva_predka"
+  "rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poyavilis_eshchyo_dva_predka",
+  "rss:https://habr.com/ru/articles/1105700/?utm_campaign=1105700&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -418,12 +419,12 @@
   "pixabay-photo:67574",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/4/4a/Philip_Burne-Jones_-_The_Vampire.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "wiki-img:https://upload.wikimedia.org/wikipedia/commons/6/6d/Oberon_in_true_color_by_Kevin_M._Gill.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
-  "card:rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poya"
+  "card:rss:https://elementy.ru/novosti_nauki/434436/U_eukariot_poya",
+  "pixabay-photo:6998194"
  ],
- "posts": 156,
- "last_post": "2026-11-26T21:01+03:00",
+ "posts": 157,
+ "last_post": "2026-11-27T09:01+03:00",
  "recent_topics": [
-  "general",
   "pop",
   "general",
   "general",
@@ -442,7 +443,8 @@
   "general",
   "general",
   "general",
-  "pop"
+  "pop",
+  "general"
  ],
- "last_slot": "2026-11-26 21:00"
+ "last_slot": "2026-11-27 09:00"
 }
