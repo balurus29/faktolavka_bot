@@ -236,7 +236,8 @@
   "wiki:Бельгийская операция (1940)",
   "wiki:Бабушкины сказки (картина)",
   "rss:https://www.sciencedaily.com/releases/2026/10/261030003006.htm",
-  "rss:https://habr.com/ru/articles/1110106/?utm_campaign=1110106&utm_source=habrahabr&utm_medium=rss"
+  "rss:https://habr.com/ru/articles/1110106/?utm_campaign=1110106&utm_source=habrahabr&utm_medium=rss",
+  "rss:https://habr.com/ru/companies/ruvds/articles/1110272/?utm_campaign=1110272&utm_source=habrahabr&utm_medium=rss"
  ],
  "used_media": [
   "pixabay-photo:3315817",
@@ -432,17 +433,17 @@
   "commons:27570451",
   "pixabay-photo:2926087",
   "pixabay-photo:7254940",
-  "nasa:PIA21427"
+  "nasa:PIA21427",
+  "commons:97516380"
  ],
- "posts": 162,
- "last_post": "2026-11-28T13:01+03:00",
+ "posts": 163,
+ "last_post": "2026-11-28T18:01+03:00",
  "recent_topics": [
   "general",
   "general",
   "general",
   "general",
   "general",
-  "general",
   "pop",
   "general",
   "general",
@@ -451,6 +452,7 @@
   "general",
   "general",
   "pop",
+  "general",
   "general",
   "general",
   "general",
@@ -458,5 +460,5 @@
   "general",
   "general"
  ],
- "last_slot": "2026-11-28 13:00"
+ "last_slot": "2026-11-28 18:00"
 }
